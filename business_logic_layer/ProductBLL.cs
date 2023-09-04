@@ -102,11 +102,13 @@ namespace business_logic_layer
                 Title = products.Title,
                 Price = products.Price,
                 Description = products.Description,
-                ImageUrls = products.ProductImages.Select((pi, index) => new ImageUpdateModel
-                {
-                    Index = index,
-                    File = pi.ImageUrl // Assuming ImageUrl is the file path or URL you want
-                }).ToList(),
+                ImageUrls = products.ProductImages
+                    .OrderBy(pi => pi.Index)  // <-- Order the ProductImages by their Index here
+                    .Select(pi => new ImageUpdateModel
+                    {
+                        Index = pi.Index,
+                        File = pi.ImageUrl // Assuming ImageUrl is the file path or URL you want
+                    }).ToList(),
                 CategoryId = products.CategoryId,
                 CategoryName = products.Category.Name
             };
