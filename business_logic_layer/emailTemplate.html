@@ -1,0 +1,116 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+</head>
+<body>
+    <div style='font-family: Arial, sans-serif; padding: 20px; background-color: #f4f4f4; text-align: center;'>
+
+        <!-- First Card -->
+        <div style='background-color: white; padding: 20px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); max-width: 400px; margin: 0 auto; margin-top: 20px; text-align: center; border-bottom: 1px solid #e0e0e0; border-radius: 8px'>
+            <h2 style='font-size: 24px; color: #333333;'>Best {recipientName},,</h2>
+            <p style='font-size: 16px; color: #777777;'>Bij deze ontvangt u de bevestiging van uw bestelling.</p>
+        </div>
+
+        <!-- Second Card with Order Details -->
+        <div style='background-color: white; padding: 20px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); max-width: 400px; margin: 0 auto; margin-top: 20px; text-align: center; border-bottom: 1px solid #e0e0e0;'>
+            <h2>Bestelgegevens</h2>
+            <p>Order Number: {OrderNummer}</p>
+            <p>Order Date:  {OrderDate}</p>
+        </div>
+
+        <!-- Third Card with 2 Columns -->
+        <div style='background-color: white; padding: 20px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); max-width: 400px; margin: 0 auto; display: flex; justify-content: space-between;'>
+
+            <!-- First content for Address -->
+            <div style='width: 48%; text-align: left;'>
+                <h3>Onze gegevens</h3>
+                <div>
+                    <div>Websheba</div>
+                </div>
+                <div style='margin-top: 10px;'>
+                    <div>Lijster 8</div>
+                </div>
+                <div style='margin-top: 10px;'>
+                    <div>1628AJ Hoorn</div>
+                </div>
+                <div style='margin-top: 10px;'>
+                    <div>0618735882</div>
+                </div>
+            </div>
+
+             <!--Second content for Customer Details--> 
+            <div style='width: 48%; text-align: right;'>
+                <h3>Uw gegevens</h3>
+                <div>
+                    <div>{recipientName}</div>
+                </div>
+                <div style='margin-top: 10px;'>
+                    <div>{line1}</div>
+                </div>
+                <div style='margin-top: 10px;'>
+                    <div>{postalCode} {city}</div>
+                </div>
+                <div style='margin-top: 10px;'>
+                    <div>0620304050</div>
+                </div>
+            </div>
+
+        </div>
+        <!-- Fourth Card with Order Items Table -->
+        <div style='background-color: white; padding: 20px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); max-width: 400px; margin: 0 auto; border-top: 1px solid #e0e0e0;'>
+            <h3>Bestelde artikelen</h3>
+            <table style='width: 100%; border-collapse: collapse;'>
+                <thead>
+                    <tr>
+                        <th style='border-bottom: 2px solid #e0e0e0; text-align: left; padding: 8px;'>Photo</th>
+                        <th style='border-bottom: 2px solid #e0e0e0; text-align: left; padding: 8px;'>Product</th>
+                        <th style='border-bottom: 2px solid #e0e0e0; text-align: left; padding: 8px;'>Quantity</th>
+                        <th style='border-bottom: 2px solid #e0e0e0; text-align: left; padding: 8px;'>Price</th>
+                        <th style='border-bottom: 2px solid #e0e0e0; text-align: left; padding: 8px;'>Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {orderItemsHtml}
+                </tbody>
+            </table>
+
+        </div>
+
+         <!--Fiverth Card with Order Items Table--> 
+        <div style='background-color: white; padding: 20px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); max-width: 400px; margin: 0 auto; display: flex; justify-content: space-between;'>
+
+             <!--First content for Address--> 
+            <div style='width: 48%; text-align: left;'>
+
+                <div>
+                    <div>Transactiekosten</div>
+                </div>
+                <div style='margin-top: 10px;'>
+                    <h3>Totaal</h3>
+                </div>
+
+                <div style='margin-top: 10px;'>
+                    <div>Betaald middels <span style='font-size: 20px;'>{paymentMethodType}</span></div>
+                </div>
+            </div>
+
+            <!-- Second content for Customer Details -->
+            <div style='width: 48%; text-align: right;'>
+
+                <div>
+                    <div>€0,19</div>
+                </div>
+                <div style='margin-top: 10px;'>
+                    <div>€{formattedAmountTotal}</div>
+                </div>
+
+            </div>
+        </div>
+        <div style='background-color: #000000; padding: 20px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); max-width: 400px; margin: 0 auto; margin-top: 20px; text-align: center; border-bottom: 1px solid #e0e0e0; border-radius: 8px'>
+            <h2 style='font-size: 24px; color:  white;'>Hulp nodig?</h2>
+            <p style='font-size: 16px; color:  white;'>Als u vragen heeft over uw bestelling, neem dan contact met ons op via [e-mailadres] of bel ons op [telefoonnummer].</p>
+        </div>;
+</body>
+</html>
