@@ -132,8 +132,9 @@ namespace business_logic_layer
 
         public async Task<StripeImage> GetProductsByProductName(string product)
         {
+            Console.WriteLine($"productrrrrrrr: {product}");
             var products = await _ProductDAL.GetProductsByProductName(product);
-
+         
             return new StripeImage
             {
                 Title = products.Title,

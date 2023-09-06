@@ -33,20 +33,23 @@ namespace Data_layer
         }
 
 
-        public async Task<List<CartEnityModel>> GetCartItems()
+        public async Task<List<CartEnityModel>> GetCartItems(string sessionId)
         {
-            return await _context.Cart.ToListAsync();
+            return await _context.Cart.Where(item => item.SessionId == sessionId).ToListAsync();
         }
 
-        public async Task ClearCart()
+
+        public async Task ClearCart(string sessionId)
         {
-            _context.Cart.RemoveRange(_context.Cart);
+            var RemoveCart = await _context.Cart.Where(item => item.SessionId == sessionId).ToListAsync();
+            _context.Cart.RemoveRange(RemoveCart);
             await _context.SaveChangesAsync();
         }
 
-        public async Task RemoveProduct(Guid productId)
+        public async Task RemoveProduct(Guid productId, string sessionId)
         {
-            var productToRemove = _context.Cart.FirstOrDefault(item => item.productId == productId);
+            Console.WriteLine($"sessionId: {sessionId}");
+            var productToRemove = _context.Cart.FirstOrDefault(item => item.productId == productId && item.SessionId == sessionId);
 
             if (productToRemove != null)
             {
@@ -55,9 +58,9 @@ namespace Data_layer
             }
         }
 
-        public async Task<CartEnityModel> UpdateProductQuantity(Guid productId)
+        public async Task<CartEnityModel> UpdateProductQuantity(Guid productId, string sessionId)
         {
-            var productToUpdate = _context.Cart.FirstOrDefault(item => item.productId == productId);
+            var productToUpdate = _context.Cart.FirstOrDefault(item => item.productId == productId && item.SessionId == sessionId);
 
             if (productToUpdate != null)
             {

@@ -16,7 +16,7 @@ namespace business_logic_layer
 			_cartDAL = new CartDAL();
 		}
 
-        public async Task<CartModel> AddCart(CartModel cart)
+        public async Task<CartModel> AddCart(CartModel cart, string sessionId)
         {
 
             CartEnityModel cartFormat = new CartEnityModel()
@@ -27,16 +27,18 @@ namespace business_logic_layer
                 Description = cart.Description,
                 ImageUrl = cart.ImageUrl,
                 Quantity = cart.Quantity,
-                CategoryName = cart.CategoryName
-                
+                CategoryName = cart.CategoryName,
+                SessionId = sessionId
+
             };
+            cartFormat.SessionId = sessionId;
             await _cartDAL.AddProduct(cartFormat);
             return cart;
         }
 
-        public async Task<List<CartModel>> GetCart()
+        public async Task<List<CartModel>> GetCart(string sessionId)
         {
-            var cartEntities = await _cartDAL.GetCartItems();
+            var cartEntities = await _cartDAL.GetCartItems(sessionId);
             return cartEntities.Select(item => new CartModel
             {
                 productId = item.productId,
@@ -49,19 +51,19 @@ namespace business_logic_layer
             }).ToList();
         }
 
-        public async Task ClearCart()
+        public async Task ClearCart(string sessionId)
         {
-            await _cartDAL.ClearCart();
+            await _cartDAL.ClearCart(sessionId);
         }
 
-        public async Task RemoveCart(Guid productId)
+        public async Task RemoveCart(Guid productId, string sessionId)
         {
-            await _cartDAL.RemoveProduct(productId);
+            await _cartDAL.RemoveProduct(productId, sessionId);
         }
 
-        public async Task<CartModel> UpdateCartQuantity(Guid productId)
+        public async Task<CartModel> UpdateCartQuantity(Guid productId, string sessionId)
         {
-            var updatedProduct = await _cartDAL.UpdateProductQuantity(productId);
+            var updatedProduct = await _cartDAL.UpdateProductQuantity(productId, sessionId);
             if (updatedProduct == null)
             {
                 return null;

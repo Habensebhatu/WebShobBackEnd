@@ -10,6 +10,7 @@ namespace business_logic_layer.ViewModel
         public string ImageUrl { get; set; }
         public int Quantity { get; set; }
         public string CategoryName { get; set; }
+        public string sessionId { get; set; }
     }
 }
 

@@ -13,7 +13,8 @@ builder.Services.AddDbContext<MyDbContext>(options =>
 
 builder.Services.AddCors(p => p.AddPolicy("corspolicy", build => {
 
-    build.WithOrigins("http://localhost:4200", "http://localhost:52408").AllowAnyMethod().AllowAnyHeader();
+    build.WithOrigins("http://localhost:4200", "http://localhost:52408")
+    .AllowAnyMethod().AllowAnyHeader(); 
 }));
 
 
@@ -25,6 +26,8 @@ builder.Services.AddSingleton(x => new BlobServiceClient(builder.Configuration.G
 builder.Services.Configure<emailSettingsModel>(builder.Configuration.GetSection("EmailSettings"));
 builder.Services.AddTransient<IEmailService, EmailService>();
 
+
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -34,12 +37,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 app.UseCors("corspolicy");
-
 app.UseHttpsRedirection();
-
 app.UseAuthorization();
-
 app.MapControllers();
-
 app.Run();
 

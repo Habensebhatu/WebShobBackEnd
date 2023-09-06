@@ -77,7 +77,7 @@ namespace Data_layer
 
         public async Task<Product> GetProductsByProductName(string product)
         {
-            return await _context.Product.Include(p => p.Category).Include(p => p.ProductImages).FirstOrDefaultAsync(p => p.Title == product);
+            return await _context.Product.Include(p => p.Category).Include(p => p.ProductImages).FirstOrDefaultAsync(p => p.Title.Contains(product));
         }
 
         public async Task<List<Product>> fillterPrice(decimal min, decimal max)

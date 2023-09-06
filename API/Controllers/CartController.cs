@@ -18,20 +18,22 @@ namespace API.Controllers
         [HttpPost]
         public async Task<ActionResult<CartModel>> AddToCart([FromBody] CartModel cart)
         {
+           
             if (cart == null)
             {
                 return BadRequest();
             }
 
-            CartModel result = await _cartBLL.AddCart(cart);
-
+            //string sessionId = cart.sessionId;
+            CartModel result = await _cartBLL.AddCart(cart, cart.sessionId);
             return result;
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<CartModel>>> GetCart()
+        public async Task<ActionResult<List<CartModel>>> GetCart(string sessionId)
         {
-            var cart = await _cartBLL.GetCart();
+           
+            var cart = await _cartBLL.GetCart(sessionId);
             if (cart == null)
             {
                 return NotFound();
@@ -40,23 +42,24 @@ namespace API.Controllers
         }
 
         [HttpDelete]
-        public async Task<IActionResult> ClearCart()
+        public async Task<IActionResult> ClearCart(string sessionId)
         {
-            await _cartBLL.ClearCart();
+            await _cartBLL.ClearCart(sessionId);
             return Ok(new { message = "Cart Cleared" });
         }
 
         [HttpDelete("{productId}")]
-        public async Task<IActionResult> RemoveFromCart(Guid productId)
+        public async Task<IActionResult> RemoveFromCart(Guid productId, string sessionId)
         {
-            await _cartBLL.RemoveCart(productId);
+            await _cartBLL.RemoveCart(productId, sessionId);
             return Ok(new { message = "Product removed from cart" });
         }
 
         [HttpPut("{productId}")]
-        public async Task<ActionResult<CartModel>> UpdateProductQuantity(Guid productId)
+        public async Task<ActionResult<CartModel>> UpdateProductQuantity(Guid productId, string sessionId)
         {
-            var updatedProduct = await _cartBLL.UpdateCartQuantity(productId);
+            Console.WriteLine($"sessionId sessionId sessionId: {sessionId}");
+            var updatedProduct = await _cartBLL.UpdateCartQuantity(productId, sessionId);
             if (updatedProduct == null)
             {
                 return NotFound();

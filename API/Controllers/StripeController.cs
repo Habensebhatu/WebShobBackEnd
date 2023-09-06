@@ -205,6 +205,7 @@ namespace API.Controllers
                     mailRequest.paymentMethodType = paymentMethodType;
                     foreach (var lineItem in sessionWithLineItems.LineItems)
                     {
+                        Console.WriteLine($"ineItem.Description: {lineItem.Description}");
 
                         StripeImage product = await _productBLL.GetProductsByProductName(lineItem.Description);
                        

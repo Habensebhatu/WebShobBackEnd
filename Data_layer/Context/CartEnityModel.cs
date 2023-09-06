@@ -14,6 +14,7 @@ namespace Data_layer.Context.Data
         public string ImageUrl { get; set; }
         public int Quantity { get; set; }
         public string CategoryName { get; set; }
+        public string SessionId { get; set; }
     }
 }
 
