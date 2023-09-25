@@ -28,7 +28,7 @@ namespace API.Controllers
                 return BadRequest();
             }
 
-            OrderModel  result = await _orderBLL.AddOrder(orderModel);
+            OrderModel result = await _orderBLL.AddOrder(orderModel);
 
             return result;
         }

@@ -14,12 +14,14 @@ namespace API.Controllers
     public class CustomerController : ControllerBase
     {
         private readonly customerBLL _customer;
-        public CustomerController() {
+        public CustomerController()
+        {
 
             _customer = new customerBLL();
         }
         [HttpPost]
-        public async Task<ActionResult<CustomerModel>> addCustomer(CustomerModel customer) {
+        public async Task<ActionResult<CustomerModel>> addCustomer(CustomerModel customer)
+        {
 
             if (customer == null)
             {
@@ -35,7 +37,7 @@ namespace API.Controllers
         [HttpGet("{customer}")]
         public async Task<ActionResult<CustomerModel>> getCategoryByCategory(string customer)
         {
-            return await  _customer.GetCustomerByEmail(customer);
+            return await _customer.GetCustomerByEmail(customer);
         }
 
     }

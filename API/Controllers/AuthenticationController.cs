@@ -24,7 +24,7 @@ namespace API.Controllers
         public async Task<ActionResult<LoginModel>> Login([FromBody] LoginModel model)
         {
 
-            LoginModel user = await _loginBLL.Authenticate(model.username , model.password);
+            LoginModel user = await _loginBLL.Authenticate(model.username, model.password);
 
             if (user == null)
             {

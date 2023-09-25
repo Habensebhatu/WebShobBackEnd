@@ -8,104 +8,104 @@ using IdGen;
 
 namespace API.Controllers
 {
-	[Route("api/[controller]")]
-	[ApiController]
-	public class StripeController : ControllerBase
-	{
+    [Route("api/[controller]")]
+    [ApiController]
+    public class StripeController : ControllerBase
+    {
         private readonly OrderBLL _orderBLL;
         private readonly ProductBLL _productBLL;
         private readonly customerBLL _customer;
         private readonly IEmailService _emailService;
         public StripeController(IEmailService emailService)
-		{
-			StripeConfiguration.ApiKey = "sk_test_51NTNZBD7MblCQnUpNgCct1zsd7QMxOPgbKvgmZNKSOODW7xAk6VJm8trHx9ledkEj4nZ5CqzZuDoZslvYLcAmuuw00isSEHR10";
+        {
+            StripeConfiguration.ApiKey = "sk_test_51NTNZBD7MblCQnUpNgCct1zsd7QMxOPgbKvgmZNKSOODW7xAk6VJm8trHx9ledkEj4nZ5CqzZuDoZslvYLcAmuuw00isSEHR10";
             _orderBLL = new OrderBLL();
-			_productBLL = new ProductBLL();
+            _productBLL = new ProductBLL();
             _customer = new customerBLL();
             _emailService = emailService;
         }
-	  
-		[HttpPost("checkout")]
-		public ActionResult Create([FromBody] CheckoutRequestModel request)
-		{
 
-			var lineItems = new List<SessionLineItemOptions>();
+        [HttpPost("checkout")]
+        public ActionResult Create([FromBody] CheckoutRequestModel request)
+        {
 
-			foreach (var item in request.Items)
-			{
-				lineItems.Add(new SessionLineItemOptions
-				{
-					PriceData = new SessionLineItemPriceDataOptions
-					{
-						UnitAmount = (long?)(item.Price * 100),  
-						Currency = "eur",     
-						ProductData = new SessionLineItemPriceDataProductDataOptions
-						{
-							Name = item.Title,
-							Images = new List<string> { item.ImageUrl }  
-						},
-					  
-					},
-					Quantity = item.Quantity,
+            var lineItems = new List<SessionLineItemOptions>();
 
+            foreach (var item in request.Items)
+            {
+                lineItems.Add(new SessionLineItemOptions
+                {
+                    PriceData = new SessionLineItemPriceDataOptions
+                    {
+                        UnitAmount = (long?)(item.Price * 100),
+                        Currency = "eur",
+                        ProductData = new SessionLineItemPriceDataProductDataOptions
+                        {
+                            Name = item.Title,
+                            Images = new List<string> { item.ImageUrl }
+                        },
 
-				});
-			}
-			
+                    },
+                    Quantity = item.Quantity,
 
 
-			var options = new SessionCreateOptions
-			{
+                });
+            }
+
+
+
+            var options = new SessionCreateOptions
+            {
                 BillingAddressCollection = "required",
 
                 PaymentMethodTypes = new List<string>
 
-			    {
-		    	     "card", 
-			         "ideal"
-			    },
+                {
+                     "card",
+                     "ideal"
+                },
 
-				LineItems = lineItems,
-				Mode = "payment",
-				ShippingAddressCollection = new SessionShippingAddressCollectionOptions
-				{
-					AllowedCountries = new List<string> { "NL" },
-				},
+                LineItems = lineItems,
+                Mode = "payment",
+                ShippingAddressCollection = new SessionShippingAddressCollectionOptions
+                {
+                    AllowedCountries = new List<string> { "NL" },
+                },
 
-				CustomText = new SessionCustomTextOptions
-				{
-					ShippingAddress = new SessionCustomTextShippingAddressOptions
-					{
-						Message = "Please note that we can't guarantee 2-day delivery for PO boxes at this time.",
-					},
-					Submit = new SessionCustomTextSubmitOptions
-					{
-						Message = "We'll email you instructions on how to get started.",
-					},
-				},
-				SuccessUrl = "http://localhost:4200/payment-success",
-				CancelUrl = "http://localhost:4200/payment-cancelled",
+                CustomText = new SessionCustomTextOptions
+                {
+                    ShippingAddress = new SessionCustomTextShippingAddressOptions
+                    {
+                        Message = "Please note that we can't guarantee 2-day delivery for PO boxes at this time.",
+                    },
+                    Submit = new SessionCustomTextSubmitOptions
+                    {
+                        Message = "We'll email you instructions on how to get started.",
+                    },
+                },
+                SuccessUrl = "http://localhost:4200/payment-success",
+                CancelUrl = "http://localhost:4200/payment-cancelled",
 
-			};
-
-
-			var service = new SessionService();
-			Session session;
-			try
-			{
-				session = service.Create(options);
-			}
-			catch (StripeException e)
-			{
-				return BadRequest(e.StripeError.Message);
-			}
-
-			return Ok(new { id = session.Id });
-		}
+            };
 
 
+            var service = new SessionService();
+            Session session;
+            try
+            {
+                session = service.Create(options);
+            }
+            catch (StripeException e)
+            {
+                return BadRequest(e.StripeError.Message);
+            }
 
-		const string endpointSecret = "whsec_e0b277601cf11f1a539bf0be090a11455fed7feb64d40bef2817f12e9856f208";
+            return Ok(new { id = session.Id });
+        }
+
+
+
+        const string endpointSecret = "whsec_e0b277601cf11f1a539bf0be090a11455fed7feb64d40bef2817f12e9856f208";
 
 
         [HttpPost("webhook")]
@@ -151,7 +151,7 @@ namespace API.Controllers
                         var paymentMethod = paymentMethodService.Get(paymentIntent.PaymentMethodId);
 
                         // Get the Type
-                         paymentMethodType = paymentMethod.Type;
+                        paymentMethodType = paymentMethod.Type;
                         Console.WriteLine($"Payment method type used: {paymentMethodType}");
 
                     }
@@ -162,7 +162,7 @@ namespace API.Controllers
                     var existingCustomer = await _customer.GetCustomerByEmail(customerEmail);
                     if (existingCustomer == null && shippingDetails != null)
                     {
-                      
+
                         // If not, create new customer
                         var newCustomer = new CustomerModel
                         {
@@ -174,7 +174,7 @@ namespace API.Controllers
                             line1 = shippingAddress.Line1,
                             postalCode = shippingAddress.PostalCode
 
-                    };
+                        };
                         existingCustomer = await _customer.AddCustomer(newCustomer);
                     }
 
@@ -183,7 +183,7 @@ namespace API.Controllers
                         // Handle this error appropriately. Maybe log it and/or return a relevant response.
                         return BadRequest("Unable to create or fetch the customer.");
                     }
-                    var generator = new IdGenerator(0);  
+                    var generator = new IdGenerator(0);
                     long uniqueId = generator.CreateId() % 100000000;
 
                     OrderModel orderModel = new OrderModel
@@ -208,8 +208,8 @@ namespace API.Controllers
                         Console.WriteLine($"ineItem.Description: {lineItem.Description}");
 
                         StripeImage product = await _productBLL.GetProductsByProductName(lineItem.Description);
-                       
-              
+
+
                         orderModel.OrderDetails.Add(new OrderDetailModel
                         {
                             ProductId = product.productId,
@@ -225,7 +225,7 @@ namespace API.Controllers
                             Price = (decimal)lineItem.AmountTotal / (decimal)lineItem.Quantity / 100,
                             Total = (decimal)lineItem.AmountTotal / 100,
                             ImageUrl = product.ImageUrls
-                            
+
                         });
                     }
                     Console.WriteLine($"Ordermodel: {orderModel}");

@@ -6,39 +6,51 @@ using Data_layer.Context.Data;
 
 namespace business_logic_layer
 {
-	public class CartBLL
-	{
+    public class CartBLL
+    {
 
         private readonly CartDAL _cartDAL;
 
         public CartBLL()
-		{
-			_cartDAL = new CartDAL();
-		}
-
-        public async Task<CartModel> AddCart(CartModel cart, string sessionId)
         {
+            _cartDAL = new CartDAL();
+        }
+
+        public async Task<CartModel> AddCart(CartModel cart, string sessionId, string userID)
+        {
+            Guid? userId = null;
+            if (!string.IsNullOrWhiteSpace(userID))
+                userId = Guid.Parse(userID);
 
             CartEnityModel cartFormat = new CartEnityModel()
             {
                 productId = cart.productId,
-                Title = cart .Title,
+                Title = cart.Title,
                 Price = cart.Price,
                 Description = cart.Description,
                 ImageUrl = cart.ImageUrl,
                 Quantity = cart.Quantity,
                 CategoryName = cart.CategoryName,
-                SessionId = sessionId
-
+                SessionId = sessionId,
+                UserId = userId
             };
-            cartFormat.SessionId = sessionId;
+
             await _cartDAL.AddProduct(cartFormat);
             return cart;
         }
 
-        public async Task<List<CartModel>> GetCart(string sessionId)
+        public string GetDefaultUserId()
         {
-            var cartEntities = await _cartDAL.GetCartItems(sessionId);
+            return _cartDAL.GetDefaultUserId().ToString();
+        }
+
+
+        public async Task<List<CartModel>> GetCart(string sessionId, string userID)
+        {
+            Guid? userId = null;
+            if (!string.IsNullOrWhiteSpace(userID))
+                userId = Guid.Parse(userID);
+            var cartEntities = await _cartDAL.GetCartItems(sessionId, userId);
             return cartEntities.Select(item => new CartModel
             {
                 productId = item.productId,
@@ -51,19 +63,32 @@ namespace business_logic_layer
             }).ToList();
         }
 
-        public async Task ClearCart(string sessionId)
+        public async Task ClearCart(string sessionId, string userID)
         {
-            await _cartDAL.ClearCart(sessionId);
+            Guid? userId = null;
+            if (!string.IsNullOrWhiteSpace(userID))
+                userId = Guid.Parse(userID);
+            await _cartDAL.ClearCart(sessionId, userId);
         }
 
-        public async Task RemoveCart(Guid productId, string sessionId)
+
+        public async Task RemoveCart(Guid productId, string userID, string sessionId)
         {
-            await _cartDAL.RemoveProduct(productId, sessionId);
+            Guid? userId = null;
+            if (!string.IsNullOrWhiteSpace(userID))
+                userId = Guid.Parse(userID);
+
+            await _cartDAL.RemoveProduct(productId, userId, sessionId);
         }
 
-        public async Task<CartModel> UpdateCartQuantity(Guid productId, string sessionId)
+
+        public async Task<CartModel> UpdateCartQuantity(Guid productId, string userID, string sessionId)
         {
-            var updatedProduct = await _cartDAL.UpdateProductQuantity(productId, sessionId);
+            Guid? userId = null;
+            if (!string.IsNullOrWhiteSpace(userID))
+                userId = Guid.Parse(userID);
+
+            var updatedProduct = await _cartDAL.UpdateProductQuantity(productId, userId, sessionId);
             if (updatedProduct == null)
             {
                 return null;
@@ -82,6 +107,7 @@ namespace business_logic_layer
                 // ... and so on for all properties
             };
         }
+
 
 
     }

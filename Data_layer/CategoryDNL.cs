@@ -5,9 +5,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Data_layer
 {
-	public class CategoryDNL
-	{
-		
+    public class CategoryDNL
+    {
+
         private readonly MyDbContext _context;
         public CategoryDNL()
         {

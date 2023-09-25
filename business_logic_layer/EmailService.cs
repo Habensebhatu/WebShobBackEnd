@@ -8,19 +8,19 @@ using System.Text;
 
 namespace business_logic_layer
 {
-    
-        public class EmailService : IEmailService
-        {
-            private readonly emailSettingsModel _emailSettings;
-           
+
+    public class EmailService : IEmailService
+    {
+        private readonly emailSettingsModel _emailSettings;
+
 
         public EmailService(IOptions<emailSettingsModel> options)
-            {
-                _emailSettings = options.Value;
-            }
+        {
+            _emailSettings = options.Value;
+        }
 
-            public async Task SendEmailAsync(mailRequestModel mailRequest)
-            {
+        public async Task SendEmailAsync(mailRequestModel mailRequest)
+        {
             var emailTemplate = System.IO.File.ReadAllText("/Users/habensebhatu/webShop/webshop/business_logic_layer/emailTemplate.html");
             emailTemplate = emailTemplate.Replace("{OrderDate}", mailRequest.OrderDate.ToString());
             emailTemplate = emailTemplate.Replace("{recipientName}", mailRequest.recipientName);
@@ -32,10 +32,10 @@ namespace business_logic_layer
 
             // Send confirmation text to customers
             var confirmationEmail = new MimeMessage();
-                confirmationEmail.Sender = MailboxAddress.Parse(_emailSettings.SenderEmail);
-                confirmationEmail.To.Add(MailboxAddress.Parse(mailRequest.CustomerName));
-                confirmationEmail.Subject = "Confirmation of your order";
-                var confirmationBuilder = new BodyBuilder();
+            confirmationEmail.Sender = MailboxAddress.Parse(_emailSettings.SenderEmail);
+            confirmationEmail.To.Add(MailboxAddress.Parse(mailRequest.CustomerName));
+            confirmationEmail.Subject = "Confirmation of your order";
+            var confirmationBuilder = new BodyBuilder();
             decimal AmountTotal = 0;
             StringBuilder orderItemsBuilder = new StringBuilder();
             foreach (var item in mailRequest.OrderItems) // Assuming you have a list called orderItems
@@ -64,16 +64,16 @@ namespace business_logic_layer
             confirmationBuilder.HtmlBody = emailTemplate;
             confirmationEmail.Body = confirmationBuilder.ToMessageBody();
 
-                using (var client = new SmtpClient())
-                {
-                    await client.ConnectAsync(_emailSettings.SmtpServer, _emailSettings.SmtpPort, SecureSocketOptions.StartTls);
-                    await client.AuthenticateAsync(_emailSettings.SenderName, _emailSettings.SmtpPassword);
-                    await client.SendAsync(confirmationEmail);
-                    await client.DisconnectAsync(true);
-                }
-
+            using (var client = new SmtpClient())
+            {
+                await client.ConnectAsync(_emailSettings.SmtpServer, _emailSettings.SmtpPort, SecureSocketOptions.StartTls);
+                await client.AuthenticateAsync(_emailSettings.SenderName, _emailSettings.SmtpPassword);
+                await client.SendAsync(confirmationEmail);
+                await client.DisconnectAsync(true);
             }
+
         }
-    
+    }
+
 }
 

@@ -1,12 +1,6 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using Azure.Storage.Blobs;
-using Azure.Storage.Blobs.Models;
 using business_logic_layer;
 using business_logic_layer.ViewModel;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 
@@ -17,16 +11,14 @@ namespace API.Controllers
     public class ProductController : ControllerBase
     {
         private readonly ProductBLL _productBLL;
-        
+
         public ProductController()
         {
             _productBLL = new ProductBLL();
         }
 
-       
-
         [HttpPost]
-        public async Task<ActionResult<productModel>> addProduct([FromForm] List<IFormFile> files, [FromForm] string product)
+        public async Task<ActionResult<productModel>> AddProduct([FromForm] List<IFormFile> files, [FromForm] string product)
         {
             productModel productData = JsonConvert.DeserializeObject<productModel>(product);
 
@@ -35,7 +27,7 @@ namespace API.Controllers
                 return BadRequest();
             }
             Console.WriteLine($"Number of received files: {files.Count}");
-            productData.NewImages = files;  
+            productData.NewImages = files;
             productModel result = await _productBLL.AddProduct(productData);
 
             return result;
@@ -50,13 +42,13 @@ namespace API.Controllers
         }
 
         [HttpGet("{id:guid}")]
-        public async Task<ActionResult<productModelS>> getCategoryById(Guid id)
+        public async Task<ActionResult<productModelS>> GetProductById(Guid id)
         {
             return await _productBLL.GetProductById(id);
         }
 
         [HttpGet("{product}")]
-        public async Task<StripeImage> getproductbyprodutName(string product)
+        public async Task<StripeImage> GetProductsByProductName(string product)
         {
             return await _productBLL.GetProductsByProductName(product);
         }
@@ -73,7 +65,7 @@ namespace API.Controllers
         }
 
         [HttpGet("filterPrice/{min}/{max}")]
-        public async Task<ActionResult<List<StripeImage>>>fillterPrice([FromRoute] Decimal min, [FromRoute] Decimal max)
+        public async Task<ActionResult<List<StripeImage>>> fillterPrice([FromRoute] Decimal min, [FromRoute] Decimal max)
         {
             var product = await _productBLL.fillterPrice(min, max);
             if (product == null)
@@ -82,6 +74,16 @@ namespace API.Controllers
             }
             return product;
         }
+
+        [HttpGet("search/{productName}")]
+        public async Task<ActionResult<List<productModelS>>> SearchProductsByProductName(string productName)
+        {
+            var product = await _productBLL.SearchProductsByProductName(productName);
+
+            Console.WriteLine($"productName productName productName: {product[0].Description}");
+            return product;
+        }
+
 
 
         [HttpDelete("{id}")]
@@ -101,11 +103,7 @@ namespace API.Controllers
             {
                 return BadRequest();
             }
-
-            Console.WriteLine($"Number of received files for update: {newImages.Count}");
-            Console.WriteLine($"newImageIndices: {newImageIndices}");
-            Console.WriteLine($"existingImageUrls: {existingImageUrls.Count}");
-            productData.NewImages= newImages;
+            productData.NewImages = newImages;
             productData.NewImageIndices = newImageIndices;
             productData.ExistingImageUrls = existingImageUrls;
 
@@ -113,6 +111,15 @@ namespace API.Controllers
 
             return result;
         }
+
+
+        [HttpGet("popular")]
+        public async Task<ActionResult<List<productModelS>>> GetPopularProducts()
+        {
+            var popularProducts = await _productBLL.GetPopularProducts();
+            return Ok(popularProducts);
+        }
+
 
 
     }

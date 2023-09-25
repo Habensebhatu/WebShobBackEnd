@@ -21,7 +21,7 @@ namespace API.Controllers
             _CategorBLL = new CategoryBLL();
         }
         [HttpPost]
-        public async Task<ActionResult<CategoryModel>> addCategory([FromBody] CategoryModel category)
+        public async Task<ActionResult<CategoryModel>> AddCategory([FromBody] CategoryModel category)
         {
             if (category == null)
             {
@@ -34,31 +34,31 @@ namespace API.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<CategoryModel>>> getCategories()
+        public async Task<ActionResult<IEnumerable<CategoryModel>>> GetCategories()
         {
             return await _CategorBLL.GetCategories();
         }
 
         [HttpGet("{id:guid}")]
-        public async Task<ActionResult<CategoryModel>> getCategoryById(Guid id)
+        public async Task<ActionResult<CategoryModel>> GetCategoryById(Guid id)
         {
             return await _CategorBLL.GetCategoryById(id);
         }
 
         [HttpGet("{category}")]
-        public async Task<ActionResult<CategoryModel>> getCategoryByCategory(string category)
+        public async Task<ActionResult<CategoryModel>> GetCategoryByCategory(string category)
         {
             return await _CategorBLL.GetCategoryByCategory(category);
         }
 
         [HttpDelete("{id}")]
-        public async Task<ActionResult<CategoryModel>> removeCategory(Guid id)
+        public async Task<ActionResult<CategoryModel>> RemoveCategory(Guid id)
         {
             return await _CategorBLL.RemoveCategory(id);
         }
 
         [HttpPut("{id}")]
-        public async Task<ActionResult<CategoryModel>> updateCategory(Guid id, [FromBody] CategoryModel category)
+        public async Task<ActionResult<CategoryModel>> UpdateCategory(Guid id, [FromBody] CategoryModel category)
         {
             var updatedCategory = await _CategorBLL.UpdateCategory(id, category);
             if (updatedCategory == null)

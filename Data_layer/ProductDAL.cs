@@ -5,11 +5,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Data_layer
 {
-	public class ProductDAL
-	{
+    public class ProductDAL
+    {
         private readonly MyDbContext _context;
         public ProductDAL()
-		{
+        {
             _context = new MyDbContext();
         }
 
@@ -68,11 +68,17 @@ namespace Data_layer
             return await _context.Product.Include(p => p.Category).Include(p => p.ProductImages).FirstOrDefaultAsync(p => p.productId == id);
         }
 
-        
+
 
         public async Task<List<Product>> GetProductsByName(string category)
         {
-            return await _context.Product.Include(p => p.Category).Where(p => p.Category.Name == category).ToListAsync();
+            return await _context.Product.Include(p => p.Category).Include(p => p.ProductImages).Where(p => p.Category.Name == category).ToListAsync();
+        }
+
+        public async Task<List<Product>> SearchProductsByProductName(string product)
+        {
+            return await _context.Product.Include(p => p.Category).Include(p => p.ProductImages).Where(p => p.Title.StartsWith(product)).ToListAsync();
+
         }
 
         public async Task<Product> GetProductsByProductName(string product)
@@ -95,10 +101,6 @@ namespace Data_layer
             }
         }
 
-        //public async Task UpdateProduct()
-        //{
-        //    await _context.SaveChangesAsync();
-        //}
 
         public async Task<Product> UpdateProduct(Product product, List<ExistingImageMode> imageModels)
         {
@@ -145,6 +147,12 @@ namespace Data_layer
 
             return product;
         }
+
+        public async Task<List<Product>> GetPopularProducts()
+        {
+            return await _context.Product.Include(p => p.Category).Include(p => p.ProductImages).Where(p => p.IsPopular).ToListAsync();
+        }
+
 
 
     }

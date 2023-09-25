@@ -11,6 +11,7 @@ namespace business_logic_layer.ViewModel
         public string Description { get; set; }
         public List<ImageUpdateModel> ImageUrls { get; set; }
         public string CategoryName { get; set; }
+        public bool IsPopular { get; set; } = false;
         public Guid CategoryId { get; set; }
     }
 

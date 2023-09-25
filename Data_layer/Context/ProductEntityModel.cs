@@ -11,6 +11,7 @@ namespace Data_layer.Context
         public string Title { get; set; }
         public decimal Price { get; set; }
         public string Description { get; set; }
+        public bool IsPopular { get; set; } = false;
         public Guid CategoryId { get; set; }
         [ForeignKey("CategoryId")]
         public Category Category { get; set; }

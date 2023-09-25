@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Data_layer.Migrations
 {
     [DbContext(typeof(MyDbContext))]
-    [Migration("20230727160859_orderNumberAdded")]
-    partial class orderNumberAdded
+    [Migration("20230924213157_dontrf")]
+    partial class dontrf
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -76,6 +76,82 @@ namespace Data_layer.Migrations
                     b.HasKey("CustomerId");
 
                     b.ToTable("Customer");
+                });
+
+            modelBuilder.Entity("Data_layer.Context.Data.CartEnityModel", b =>
+                {
+                    b.Property<Guid>("productId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("CategoryName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ImageUrl")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal>("Price")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
+
+                    b.Property<string>("SessionId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid?>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("productId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Cart");
+                });
+
+            modelBuilder.Entity("Data_layer.Context.Data.UserRegistrationEntityModel", b =>
+                {
+                    b.Property<Guid>("UserId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Gender")
+                        .HasColumnType("int");
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Password")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PhoneNumber")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("UserId");
+
+                    b.ToTable("UserRegistration");
                 });
 
             modelBuilder.Entity("Data_layer.Context.LoginEnitiyModel", b =>
@@ -161,9 +237,8 @@ namespace Data_layer.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("ImageUrl")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<bool>("IsPopular")
+                        .HasColumnType("bit");
 
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");
@@ -177,6 +252,72 @@ namespace Data_layer.Migrations
                     b.HasIndex("CategoryId");
 
                     b.ToTable("Product");
+                });
+
+            modelBuilder.Entity("Data_layer.Context.ProductImageEnityModel", b =>
+                {
+                    b.Property<Guid>("ProductImageId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("ImageUrl")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Index")
+                        .HasColumnType("int");
+
+                    b.Property<Guid>("ProductId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("ProductImageId");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("ProductImage");
+                });
+
+            modelBuilder.Entity("Data_layer.Context.Data.CartEnityModel", b =>
+            {
+                b.HasOne("Data_layer.Context.Data.UserRegistrationEntityModel", "User")
+                    .WithMany("Carts")
+                    .HasForeignKey("UserID")
+                    .OnDelete(DeleteBehavior.Restrict);
+                b.Navigation("User");
+            });
+
+            modelBuilder.Entity("Data_layer.Context.Data.UserRegistrationEntityModel", b =>
+                {
+                    b.OwnsOne("Data_layer.Context.Data.Address", "Address", b1 =>
+                        {
+                            b1.Property<Guid>("AddressId")
+                                .HasColumnType("uniqueidentifier");
+
+                            b1.Property<int?>("Number")
+                                .HasColumnType("int");
+
+                            b1.Property<string>("Residence")
+                                .IsRequired()
+                                .HasColumnType("nvarchar(max)");
+
+                            b1.Property<string>("Street")
+                                .IsRequired()
+                                .HasColumnType("nvarchar(max)");
+
+                            b1.Property<string>("ZipCode")
+                                .IsRequired()
+                                .HasColumnType("nvarchar(max)");
+
+                            b1.HasKey("AddressId");
+
+                            b1.ToTable("UserRegistration");
+
+                            b1.WithOwner()
+                                .HasForeignKey("AddressId");
+                        });
+
+                    b.Navigation("Address")
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Data_layer.Context.Order", b =>
@@ -220,6 +361,17 @@ namespace Data_layer.Migrations
                     b.Navigation("Category");
                 });
 
+            modelBuilder.Entity("Data_layer.Context.ProductImageEnityModel", b =>
+                {
+                    b.HasOne("Data_layer.Context.Product", "Product")
+                        .WithMany("ProductImages")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Product");
+                });
+
             modelBuilder.Entity("Data_layer.Context.Category", b =>
                 {
                     b.Navigation("Products");
@@ -230,6 +382,11 @@ namespace Data_layer.Migrations
                     b.Navigation("Orders");
                 });
 
+            modelBuilder.Entity("Data_layer.Context.Data.UserRegistrationEntityModel", b =>
+                {
+                    b.Navigation("Carts");
+                });
+
             modelBuilder.Entity("Data_layer.Context.Order", b =>
                 {
                     b.Navigation("OrderDetails");
@@ -238,6 +395,8 @@ namespace Data_layer.Migrations
             modelBuilder.Entity("Data_layer.Context.Product", b =>
                 {
                     b.Navigation("OrderDetails");
+
+                    b.Navigation("ProductImages");
                 });
 #pragma warning restore 612, 618
         }

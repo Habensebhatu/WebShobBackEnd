@@ -15,8 +15,9 @@ namespace Data_layer.Data
         public DbSet<CustomerEntityModel> Customer { get; set; }
         public DbSet<CartEnityModel> Cart { get; set; }
         public DbSet<ProductImageEnityModel> ProductImage { get; set; }
+        public DbSet<UserRegistrationEntityModel> UserRegistration { get; set; }
 
-      
+
 
         public MyDbContext()
         {
@@ -36,6 +37,8 @@ namespace Data_layer.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<UserRegistrationEntityModel>().OwnsOne(u => u.Address);
+
             modelBuilder.Entity<Product>()
                 .Property(p => p.Price)
                 .HasColumnType("decimal(18,2)");

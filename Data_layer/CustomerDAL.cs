@@ -5,11 +5,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Data_layer
 {
-	public class CustomerDAL
-	{
+    public class CustomerDAL
+    {
         private readonly MyDbContext _context;
         public CustomerDAL()
-		{
+        {
             _context = new MyDbContext();
         }
         public async Task<CustomerEntityModel> AddCustomer(CustomerEntityModel customer)
@@ -22,14 +22,14 @@ namespace Data_layer
 
         public async Task<CustomerEntityModel> getCustomerBYEmail(string customerEmail)
         {
-            CustomerEntityModel customer =  await _context.Customer.FirstOrDefaultAsync(x => x.CustomerEmail == customerEmail);
-            if(customer == null) 
+            CustomerEntityModel customer = await _context.Customer.FirstOrDefaultAsync(x => x.CustomerEmail == customerEmail);
+            if (customer == null)
             {
                 return null;
             }
             return customer;
         }
     }
-   
+
 }
 

@@ -15,6 +15,8 @@ namespace Data_layer.Context.Data
         public int Quantity { get; set; }
         public string CategoryName { get; set; }
         public string SessionId { get; set; }
+        public Guid? UserId { get; set; } = Guid.NewGuid();
+        public UserRegistrationEntityModel User { get; set; }
     }
 }
 

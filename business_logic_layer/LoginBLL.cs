@@ -8,7 +8,7 @@ namespace business_logic_layer
 	public class LoginBLL
 	{
 		private readonly LoginDAL _loginDAL;
-        public LoginBLL()
+		public LoginBLL()
 		{
 			_loginDAL = new LoginDAL();
 		}
@@ -17,7 +17,7 @@ namespace business_logic_layer
 		{
 			LoginEnitiyModel loginEnitiy = await _loginDAL.GetUserByEmail(username);
 
-			if(loginEnitiy != null && loginEnitiy.password == password)
+			if (loginEnitiy != null && loginEnitiy.password == password)
 			{
 				LoginModel user = new LoginModel()
 				{
@@ -25,10 +25,10 @@ namespace business_logic_layer
 					password = password
 				};
 				return user;
-            }
+			}
 
-            return null;
-        }
-    }
+			return null;
+		}
+	}
 }
 

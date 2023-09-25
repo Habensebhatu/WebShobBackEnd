@@ -5,11 +5,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Data_layer
 {
-	public class LoginDAL
-	{
+    public class LoginDAL
+    {
         private readonly MyDbContext _context;
         public LoginDAL()
-		{
+        {
             _context = new MyDbContext();
         }
 

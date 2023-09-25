@@ -10,14 +10,14 @@ using static System.Net.Mime.MediaTypeNames;
 
 namespace business_logic_layer
 {
-	public class ProductBLL
-	{
+    public class ProductBLL
+    {
         private readonly CategoryDNL _CategoryDAL;
         private readonly ProductDAL _ProductDAL;
         private readonly string azureConnectionString = "DefaultEndpointsProtocol=https;AccountName=imagestorewebshop;AccountKey=zF/V2og9TL6djw1t5q5Ej85iIv6gTRXFYZYYGNM2mQCL9GqiIJPkxcJ1oaLiDvdXwjukLUGjpArJ+ASteuO8tg==;EndpointSuffix=core.windows.net";
-      
+
         public ProductBLL()
-		{
+        {
             _ProductDAL = new ProductDAL();
             _CategoryDAL = new CategoryDNL();
         }
@@ -39,7 +39,8 @@ namespace business_logic_layer
                 Price = product.Price,
                 Description = product.Description,
                 CategoryId = product.CategoryId,
-               
+                IsPopular = product.IsPopular,
+
             };
             Console.WriteLine($"business_logic_layer imageUrls count: {imageUrls.Count}");
 
@@ -82,6 +83,7 @@ namespace business_logic_layer
                 Description = p.Description,
                 CategoryId = p.CategoryId,
                 CategoryName = p.Category.Name,
+                IsPopular = p.IsPopular,
                 ImageUrls = p.ProductImages
                     .OrderBy(pi => pi.Index)  // <-- Order the ProductImages by their Index here
                     .Select(pi => new ImageUpdateModel
@@ -114,7 +116,30 @@ namespace business_logic_layer
             };
         }
 
-        public async Task<List<productModelS>> GetProductsByName(string  category)
+        public async Task<List<productModelS>> SearchProductsByProductName(string product)
+        {
+            var products = await _ProductDAL.SearchProductsByProductName(product);
+            return products.Select(p => new productModelS
+            {
+                productId = p.productId,
+                Title = p.Title,
+                Price = p.Price,
+                Description = p.Description,
+                CategoryId = p.CategoryId,
+                CategoryName = p.Category.Name,
+                IsPopular = p.IsPopular,
+                ImageUrls = p.ProductImages
+                   .OrderBy(pi => pi.Index)
+                   .Select(pi => new ImageUpdateModel
+                   {
+                       Index = pi.Index,
+                       File = pi.ImageUrl
+                   }).ToList()
+            }).ToList();
+
+        }
+
+        public async Task<List<productModelS>> GetProductsByName(string category)
         {
             var products = await _ProductDAL.GetProductsByName(category);
 
@@ -124,7 +149,13 @@ namespace business_logic_layer
                 Title = p.Title,
                 Price = p.Price,
                 Description = p.Description,
-                //ImageUrl = p.ImageUrl,
+                ImageUrls = p.ProductImages
+                    .OrderBy(pi => pi.Index)  // <-- Order the ProductImages by their Index here
+                    .Select(pi => new ImageUpdateModel
+                    {
+                        Index = pi.Index,
+                        File = pi.ImageUrl // Assuming ImageUrl is the file path or URL you want
+                    }).ToList(),
                 CategoryId = p.CategoryId,
                 CategoryName = p.Category.Name
             }).ToList();
@@ -134,7 +165,7 @@ namespace business_logic_layer
         {
             Console.WriteLine($"productrrrrrrr: {product}");
             var products = await _ProductDAL.GetProductsByProductName(product);
-         
+
             return new StripeImage
             {
                 Title = products.Title,
@@ -184,8 +215,6 @@ namespace business_logic_layer
                 var index = product.NewImageIndices[i]; // Fetch the index
 
                 var imageUrl = await UploadImageToAzure(image);
-                // Consider including the index with the URL, or modify your logic as needed
-                // Add a new instance of ExistingImageUrlModel
                 allImageUrls.Add(new ExistingImageUrlModel
                 {
                     file = imageUrl,
@@ -199,7 +228,8 @@ namespace business_logic_layer
                 Title = product.Title,
                 Price = product.Price,
                 Description = product.Description,
-                CategoryId = categoryBYName.CategoryId
+                CategoryId = categoryBYName.CategoryId,
+                IsPopular = product.IsPopular
             };
             var formattedImages = allImageUrls.Select(i => new ExistingImageMode()
             {
@@ -212,6 +242,28 @@ namespace business_logic_layer
             return product;
         }
 
+        public async Task<List<productModelS>> GetPopularProducts()
+        {
+            var products = await _ProductDAL.GetPopularProducts();
+            return products.Select(p => new productModelS
+            {
+                productId = p.productId,
+                Title = p.Title,
+                Price = p.Price,
+                Description = p.Description,
+                CategoryId = p.CategoryId,
+                CategoryName = p.Category.Name,
+                IsPopular = p.IsPopular,
+                ImageUrls = p.ProductImages
+                    .OrderBy(pi => pi.Index)
+                    .Select(pi => new ImageUpdateModel
+                    {
+                        Index = pi.Index,
+                        File = pi.ImageUrl
+                    }).ToList()
+            }).ToList();
+
+        }
 
     }
 }

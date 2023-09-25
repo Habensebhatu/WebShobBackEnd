@@ -5,15 +5,16 @@ using Data_layer.Context;
 
 namespace business_logic_layer
 {
-	public class OrderBLL
-	{
-		private readonly OrderDAL _orderDAL;
-		public OrderBLL()
-		{
-			_orderDAL = new OrderDAL();
-		}
+    public class OrderBLL
+    {
+        private readonly OrderDAL _orderDAL;
+        public OrderBLL()
+        {
+            _orderDAL = new OrderDAL();
+        }
 
-		public async Task<OrderModel> AddOrder(OrderModel order) {
+        public async Task<OrderModel> AddOrder(OrderModel order)
+        {
 
             Order FormatOrder = new Order()
             {
@@ -27,7 +28,7 @@ namespace business_logic_layer
                     ProductId = od.ProductId,
                     Quantity = od.Quantity,
                     AmountTotal = od.AmountTotal / 100,
-                   
+
                 }).ToList()
             };
             await _orderDAL.AddOrder(FormatOrder);
@@ -55,8 +56,8 @@ namespace business_logic_layer
                     AmountTotal = od.AmountTotal,
                     ImageUrl = od.Product.ProductImages?.FirstOrDefault()?.ImageUrl,
                     Price = od.Product.Price
-                   
-                    
+
+
                 }).ToList()
             }).ToList();
         }
