@@ -16,15 +16,12 @@ builder.Services.AddDbContext<MyDbContext>(options =>
 
 builder.Services.AddCors(p => p.AddPolicy("corspolicy", build => {
 
-    build.WithOrigins("http://localhost:4200", "http://localhost:51584")
+    build.WithOrigins("http://localhost:4200", "http://localhost:53593")
     .AllowAnyMethod().AllowAnyHeader();
 }));
 
 builder.Services.AddAuthentication(configureOptions: options =>
 {
-    //options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-    //options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-    //options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
 
 }).AddJwtBearer(options =>
 {

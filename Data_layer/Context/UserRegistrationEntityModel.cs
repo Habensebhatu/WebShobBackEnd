@@ -30,6 +30,9 @@ namespace Data_layer.Context.Data
 
             public virtual ICollection<CartEnityModel> Carts { get; set; }
 
+           public virtual ICollection<WishlistEntityModel> Wishlists { get; set; }
+
+
 
     }
 

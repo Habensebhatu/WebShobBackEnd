@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Data_layer.Context.Data;
 
 namespace Data_layer.Context
 {
@@ -17,6 +18,8 @@ namespace Data_layer.Context
         public Category Category { get; set; }
         public ICollection<OrderDetail> OrderDetails { get; set; }
         public virtual ICollection<ProductImageEnityModel> ProductImages { get; set; }
+        public virtual ICollection<ProductWishlist> ProductWishlists { get; set; }
+
     }
 
 }

@@ -16,8 +16,10 @@ namespace Data_layer.Data
         public DbSet<CartEnityModel> Cart { get; set; }
         public DbSet<ProductImageEnityModel> ProductImage { get; set; }
         public DbSet<UserRegistrationEntityModel> UserRegistration { get; set; }
+        public DbSet<WishlistEntityModel> WishlistEntityModel { get; set; }
+        public DbSet<ProductWishlist> ProductWishlist { get; set; }
 
-
+      
 
         public MyDbContext()
         {
