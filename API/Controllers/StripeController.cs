@@ -104,7 +104,6 @@ namespace API.Controllers
         }
 
 
-
         const string endpointSecret = "whsec_e0b277601cf11f1a539bf0be090a11455fed7feb64d40bef2817f12e9856f208";
 
 

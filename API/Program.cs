@@ -41,6 +41,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddSingleton(x => new BlobServiceClient(builder.Configuration.GetConnectionString("AzureblobConnectionString")));
 builder.Services.Configure<emailSettingsModel>(builder.Configuration.GetSection("EmailSettings"));
 builder.Services.AddTransient<IEmailService, EmailService>();
+builder.Services.AddTransient<IEmailContactUs, ContactUsBLL>();
 builder.Services.AddSingleton(builder.Configuration); // <-- Adding IConfiguration as a singleton
 
 var app = builder.Build();

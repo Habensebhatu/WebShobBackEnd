@@ -30,7 +30,7 @@ namespace business_logic_layer
                
             }
             Console.WriteLine($"userId is gevonden : {productId}");
-            var productWishlistItem = new ProductWishlist
+            var productWishlistItem = new Data_layer.Context.ProductWishlist
             {
                 ProductWishlistId = Guid.NewGuid(),
                 WishlistId = userWishlist.WishlistId,

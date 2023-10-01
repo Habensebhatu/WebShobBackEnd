@@ -1,12 +1,11 @@
 ﻿using System;
-using Data_layer.Context.Data;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Data_layer.Context
+namespace Data_layer.Context.Data
 {
-	public class ProductWishlist
-	{
+    public class ProductWishlist
+    {
         [Key]
         public Guid ProductWishlistId { get; set; }
 
@@ -20,4 +19,3 @@ namespace Data_layer.Context
         public Product Product { get; set; }
     }
 }
-
