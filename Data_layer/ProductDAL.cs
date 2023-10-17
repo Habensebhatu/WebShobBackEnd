@@ -70,10 +70,34 @@ namespace Data_layer
 
 
 
-        public async Task<List<Product>> GetProductsByName(string category)
+        public async Task<List<Product>> GetProductsByName(string category, int pageNumber, int pageSize)
         {
-            return await _context.Product.Include(p => p.Category).Include(p => p.ProductImages).Where(p => p.Category.Name == category).ToListAsync();
+            return await _context.Product.Include(p => p.Category)
+                                         .Include(p => p.ProductImages)
+                                         .Where(p => p.Category.Name == category)
+                                         .Skip((pageNumber - 1) * pageSize)
+                                         .Take(pageSize)
+                                         .ToListAsync();
         }
+
+        public async Task<List<Product>> GetProductsByNameAndPrice(string category, decimal minPrice, decimal? maxPrice, int pageNumber, int pageSize)
+        {
+            var query = _context.Product.Include(p => p.Category)
+                                        .Include(p => p.ProductImages)
+                                        .Where(p => p.Category.Name == category && p.Price >= minPrice);
+
+            if (maxPrice.HasValue)
+            {
+                query = query.Where(p => p.Price <= maxPrice.Value);
+            }
+
+            return await query.Skip((pageNumber - 1) * pageSize)
+                              .Take(pageSize)
+                              .ToListAsync();
+        }
+
+
+
 
         public async Task<List<Product>> SearchProductsByProductName(string product)
         {
@@ -113,7 +137,7 @@ namespace Data_layer
                 // Handle updating images 
                 var existingImages = _context.ProductImage.Where(pi => pi.ProductId == product.productId).ToList();
 
-                // Delete images that are no longer in the list
+     
                 foreach (var existingImage in existingImages)
                 {
                     if (!imageModels.Any(imgModel => imgModel.file == existingImage.ImageUrl))

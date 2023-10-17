@@ -33,6 +33,35 @@ namespace API.Controllers
             return result;
         }
 
+        [HttpGet("category/{category}")]
+        public async Task<ActionResult<List<productModelS>>> GetProductsByName(string category, [FromQuery] int pageNumber , [FromQuery] int pageSize)
+        {
+            var product = await _productBLL.GetProductsByName(category, pageNumber, pageSize);
+            if (product == null)
+            {
+                return NotFound();
+            }
+            return product;
+        }
+
+        [HttpGet("category/{category}/price")]
+        public async Task<ActionResult<List<productModelS>>> GetProductsByNameAndPrice(
+     string category,
+     [FromQuery] decimal minPrice,
+     [FromQuery] decimal? maxPrice,
+     [FromQuery] int pageNumber,
+     [FromQuery] int pageSize)
+        {
+            var product = await _productBLL.GetProductsByNameAndPrice(category, minPrice, maxPrice, pageNumber, pageSize);
+            if (product == null || !product.Any())
+            {
+                return NotFound();
+            }
+            return product;
+        }
+
+
+
 
         [HttpGet]
         public async Task<ActionResult<List<productModelS>>> GetProducts()
@@ -53,16 +82,6 @@ namespace API.Controllers
             return await _productBLL.GetProductsByProductName(product);
         }
 
-        [HttpGet("category/{category}")]
-        public async Task<ActionResult<List<productModelS>>> GetProductsByName(string category)
-        {
-            var product = await _productBLL.GetProductsByName(category);
-            if (product == null)
-            {
-                return NotFound();
-            }
-            return product;
-        }
 
         [HttpGet("filterPrice/{min}/{max}")]
         public async Task<ActionResult<List<StripeImage>>> fillterPrice([FromRoute] Decimal min, [FromRoute] Decimal max)

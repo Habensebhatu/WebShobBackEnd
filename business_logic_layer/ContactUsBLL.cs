@@ -26,17 +26,13 @@ namespace business_logic_layer
             confirmationEmail.To.Add(MailboxAddress.Parse(mailRequest.Email));
             confirmationEmail.Subject = "Bevestiging van uw offerteaanvraag";
             var confirmationBuilder = new BodyBuilder();
-            confirmationBuilder.HtmlBody = $"Geachte {mailRequest.Name},.<br><br>Hartelijk dank voor " +
-                $"uw interesse in onze diensten" +
-                $" voor het bouwen van webshops. Wij waarderen het vertrouwen dat u in ons " +
-                $"stelt en stellen het op prijs " +
-                $"dat u de tijd heeft genomen om ons offerteformulier in te vullen." +
-                $".<br><br>Met deze e-mail willen wij u graag bevestigen dat wij uw " +
-                $"offerteaanvraag hebben ontvangen" +
-                $" en deze momenteel in behandeling is. Ons team van experts is druk bezig met het beoordelen " +
-                $"van uw vereisten en zal spoedig een gedetailleerde offerte voor u opstellen." +
-                $"<br><br> Met vriendelijke groet,<br><br>" +
-                $"WebSheba";
+            confirmationBuilder.HtmlBody = $"Geachte {mailRequest.Name},<br><br>" +
+                 $"Hartelijk dank voor uw bericht via ons 'contact ons' formulier." +
+                 $" Wij waarderen het dat u contact met ons heeft opgenomen en we zullen uw bericht zo spoedig mogelijk in behandeling nemen." +
+                 $"<br><br>Met deze e-mail willen wij u graag bevestigen dat wij uw bericht hebben ontvangen" +
+                 $" en ons team zal hier zo spoedig mogelijk op reageren." +
+                 $"<br><br> Met vriendelijke groet,<br><br>" +
+                 $"WebSheba";
             confirmationEmail.Body = confirmationBuilder.ToMessageBody();
 
             using (var client = new SmtpClient())
@@ -53,7 +49,10 @@ namespace business_logic_layer
             quoteEmail.To.Add(MailboxAddress.Parse(_emailSettings.SenderEmail)); // Replace with your email address
             quoteEmail.Subject = mailRequest.Name;
             var quoteBuilder = new BodyBuilder();
-            quoteBuilder.HtmlBody = $"Quote Request from {mailRequest.Name}<br><br>Email: {mailRequest.Email}<br><br>Telephone: {mailRequest.Telephone}<br><br>Message: {mailRequest.Body}";
+            quoteBuilder.HtmlBody = $"Bericht van {mailRequest.Name}<br><br>" +
+                 $"Email: {mailRequest.Email}<br><br>" +
+                 $"Telefoon: {mailRequest.Telephone}<br><br>" +
+                 $"Berichtinhoud: {mailRequest.Body}";
             quoteEmail.Body = quoteBuilder.ToMessageBody();
 
             using (var quoteClient = new SmtpClient())
