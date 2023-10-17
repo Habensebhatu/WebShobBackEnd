@@ -7,8 +7,7 @@ using Data_layer;
 using Data_layer.Context.Data;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
-using Org.BouncyCastle.Crypto.Generators;
-using Microsoft.Extensions.Configuration;
+
 
 
 namespace business_logic_layer
@@ -61,39 +60,10 @@ namespace business_logic_layer
 
         private string CreateToken(UserRegistrationEntityModel userEntity)
         {
-            //Console.WriteLine($"userId: {userEntity.UserId}");
-            //List<Claim> claims = new List<Claim> {
-            //   new Claim(ClaimTypes.NameIdentifier, userEntity.UserId.ToString()),
-            //    new Claim(ClaimTypes.Email, userEntity.Email),
-            //    new Claim("firstName",  userEntity.UserId.ToString()),
-            //};
-
-
-
-            //var tokenSetting = _configuration?.GetSection("AppSettings:Token");
-            //if (tokenSetting == null || string.IsNullOrEmpty(tokenSetting.Value))
-            //{
-            //    throw new Exception("Token configuration is missing or empty.");
-            //}
-
-            //var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(tokenSetting.Value));
-
-
-            //var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
-
-            //var token = new JwtSecurityToken(
-            //        claims: claims,
-            //        expires: DateTime.Now.AddDays(1),
-            //        signingCredentials: creds
-            //    );
-
-            //var jwt = new JwtSecurityTokenHandler().WriteToken(token);
-
-            //return jwt;
-
+            
             var tokenHandler = new JwtSecurityTokenHandler();
             var tokenSetting = _configuration?.GetSection("AppSettings:Token");
-            var key = Encoding.UTF8.GetBytes(tokenSetting.Value); // Move this to a configuration
+            var key = Encoding.UTF8.GetBytes(tokenSetting.Value); 
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(new Claim[]
@@ -101,7 +71,6 @@ namespace business_logic_layer
                 new Claim(ClaimTypes.NameIdentifier, userEntity.UserId.ToString()),
                 new Claim(ClaimTypes.Email, userEntity.Email),
                 new Claim("firstName", userEntity.FirstName),
-                    // Add more claims as needed
                 }),
                 Expires = DateTime.UtcNow.AddDays(7),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
@@ -114,7 +83,7 @@ namespace business_logic_layer
 
         public async Task<string> LoginUser(Login loginModel)
         {
-            var userEntity = await _UserRegistrationDAL.GetUserByEmail(loginModel.Username); // Assuming the 'Username' field in LoginModel is actually the user's email
+            var userEntity = await _UserRegistrationDAL.GetUserByEmail(loginModel.Username); 
 
             if (userEntity == null)
             {
@@ -138,7 +107,6 @@ namespace business_logic_layer
                 new Claim(ClaimTypes.NameIdentifier, userEntity.UserId.ToString()),
                 new Claim(ClaimTypes.Email, userEntity.Email),
                 new Claim("firstName", userEntity.FirstName),
-                    // Add more claims as needed
                 }),
                 Expires = DateTime.UtcNow.AddDays(7),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
@@ -148,6 +116,27 @@ namespace business_logic_layer
 
             return tokenString;
         }
+
+        public async Task<List<UserRegistrationModel>> GetAllUsers()
+        {
+            var users = await _UserRegistrationDAL.GetAllUsers();
+            return users.Select(u => new UserRegistrationModel
+            {
+                FirstName = u.FirstName,
+                LastName = u.LastName,
+                Email = u.Email,
+                Gender = (business_logic_layer.ViewModel.Gender)u.Gender,
+                PhoneNumber = u.PhoneNumber,
+                Address = new Addres
+                {
+                    Street = u.Address.Street,
+                    Number = u.Address.Number,
+                    Residence = u.Address.Residence,
+                    ZipCode = u.Address.ZipCode
+                }
+            }).ToList();
+        }
+
 
 
     }

@@ -21,10 +21,18 @@ namespace Data_layer
             return user;
         }
 
+        public async Task<List<UserRegistrationEntityModel>> GetAllUsers()
+        {
+            return await _context.UserRegistration.ToListAsync();
+        }
+
+
         public async Task<UserRegistrationEntityModel> GetUserByEmail(string email)
         {
             return await _context.UserRegistration.FirstOrDefaultAsync(u => u.Email == email);
         }
+
+
 
 
     }

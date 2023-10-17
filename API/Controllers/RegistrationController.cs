@@ -1,8 +1,7 @@
-using System.Threading.Tasks;
 using business_logic_layer;
 using business_logic_layer.ViewModel;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
+
 
 namespace API.Controllers
 {
@@ -50,6 +49,14 @@ namespace API.Controllers
 
             return Ok(new { token = token });
         }
+
+        [HttpGet("get-all-users")]
+        public async Task<ActionResult<List<UserRegistrationModel>>> GetAllUsers()
+        {
+            var users = await _userRegistrationBLL.GetAllUsers();
+            return Ok(users);
+        }
+
 
     }
 }
