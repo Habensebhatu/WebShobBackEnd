@@ -17,7 +17,7 @@ namespace API.Controllers
             _productBLL = new ProductBLL();
         }
 
-        [HttpPost]
+        [HttpPost("AddProduct")]
         public async Task<ActionResult<productModel>> AddProduct([FromForm] List<IFormFile> files, [FromForm] string product)
         {
             productModel productData = JsonConvert.DeserializeObject<productModel>(product);
@@ -33,7 +33,7 @@ namespace API.Controllers
             return result;
         }
 
-        [HttpGet("category/{category}")]
+        [HttpGet("ByCategory/{category}")]
         public async Task<ActionResult<List<productModelS>>> GetProductsByName(string category, [FromQuery] int pageNumber , [FromQuery] int pageSize)
         {
             var product = await _productBLL.GetProductsByName(category, pageNumber, pageSize);
@@ -44,7 +44,7 @@ namespace API.Controllers
             return product;
         }
 
-        [HttpGet("category/{category}/price")]
+        [HttpGet("ByCategory/{category}/ByPriceRange")]
         public async Task<ActionResult<List<productModelS>>> GetProductsByNameAndPrice(
      string category,
      [FromQuery] decimal minPrice,
@@ -63,27 +63,27 @@ namespace API.Controllers
 
 
 
-        [HttpGet]
+        [HttpGet("AllProducts")]
         public async Task<ActionResult<List<productModelS>>> GetProducts()
         {
             var products = await _productBLL.GetProducts();
             return products;
         }
 
-        [HttpGet("{id:guid}")]
+        [HttpGet("ById/{id:guid}")]
         public async Task<ActionResult<productModelS>> GetProductById(Guid id)
         {
             return await _productBLL.GetProductById(id);
         }
 
-        [HttpGet("{product}")]
+        [HttpGet("ByName/{product}")]
         public async Task<StripeImage> GetProductsByProductName(string product)
         {
             return await _productBLL.GetProductsByProductName(product);
         }
 
 
-        [HttpGet("filterPrice/{min}/{max}")]
+        [HttpGet("ByPriceRange/{min}/{max}")]
         public async Task<ActionResult<List<StripeImage>>> fillterPrice([FromRoute] Decimal min, [FromRoute] Decimal max)
         {
             var product = await _productBLL.fillterPrice(min, max);
@@ -94,7 +94,7 @@ namespace API.Controllers
             return product;
         }
 
-        [HttpGet("search/{productName}")]
+        [HttpGet("SearchByName/{productName}")]
         public async Task<ActionResult<List<productModelS>>> SearchProductsByProductName(string productName)
         {
             var product = await _productBLL.SearchProductsByProductName(productName);
@@ -105,14 +105,14 @@ namespace API.Controllers
 
 
 
-        [HttpDelete("{id}")]
+        [HttpDelete("RemoveProduct/{id}")]
         public async Task<IActionResult> RemoveProduct(Guid id)
         {
             await _productBLL.RemoveProduct(id);
             return NoContent();
         }
 
-        [HttpPut]
+        [HttpPut("UpdateProduct")]
         public async Task<ActionResult<productModel>> UpdateProduct([FromForm] List<IFormFile> newImages, [FromForm] List<int> newImageIndices, [FromForm] string product, [FromForm] string existingImages)
         {
             productModel productData = JsonConvert.DeserializeObject<productModel>(product);
@@ -132,7 +132,7 @@ namespace API.Controllers
         }
 
 
-        [HttpGet("popular")]
+        [HttpGet("PopularProducts")]
         public async Task<ActionResult<List<productModelS>>> GetPopularProducts()
         {
             var popularProducts = await _productBLL.GetPopularProducts();

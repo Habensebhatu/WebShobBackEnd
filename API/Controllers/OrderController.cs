@@ -20,8 +20,8 @@ namespace API.Controllers
             _orderBLL = new OrderBLL();
         }
 
-        [HttpPost]
-        public async Task<ActionResult<OrderModel>> addProduct([FromBody] OrderModel orderModel)
+        [HttpPost("AddOrder")]
+        public async Task<ActionResult<OrderModel>> AddOrder([FromBody] OrderModel orderModel)
         {
             if (orderModel == null)
             {
@@ -29,11 +29,10 @@ namespace API.Controllers
             }
 
             OrderModel result = await _orderBLL.AddOrder(orderModel);
-
             return result;
         }
 
-        [HttpGet]
+        [HttpGet("AllOrders")]
         public async Task<ActionResult<List<OrderModel>>> GetOrders()
         {
             List<OrderModel> orderModels = await _orderBLL.GetOrders();
@@ -44,8 +43,7 @@ namespace API.Controllers
             return orderModels;
         }
 
-
-        [HttpGet("{id}")]
+        [HttpGet("GetOrderById/{id}")]
         public async Task<ActionResult<GetOrderModel>> GetOrderById(Guid id)
         {
             GetOrderModel orderModel = await _orderBLL.GetOrderById(id);
@@ -55,7 +53,5 @@ namespace API.Controllers
 
             return orderModel;
         }
-
-
     }
 }

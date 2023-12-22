@@ -3,20 +3,19 @@ using Azure.Storage.Blobs;
 using business_logic_layer;
 using business_logic_layer.ViewModel;
 using Data_layer.Data;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using Stripe;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddDbContext<MyDbContext>(options =>
-        options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+        options.UseSqlServer(builder.Configuration.GetConnectionString("ProdConnection")));
 
 builder.Services.AddCors(p => p.AddPolicy("corspolicy", build => {
 
-    build.WithOrigins("http://localhost:4200", "http://localhost:61243")
+    build.WithOrigins("http://localhost:4200", "http://localhost:53058")
     .AllowAnyMethod().AllowAnyHeader();
 }));
 
@@ -42,7 +41,16 @@ builder.Services.AddSingleton(x => new BlobServiceClient(builder.Configuration.G
 builder.Services.Configure<emailSettingsModel>(builder.Configuration.GetSection("EmailSettings"));
 builder.Services.AddTransient<IEmailService, EmailService>();
 builder.Services.AddTransient<IEmailContactUs, ContactUsBLL>();
-builder.Services.AddSingleton(builder.Configuration); // <-- Adding IConfiguration as a singleton
+builder.Services.AddSingleton(builder.Configuration); 
+
+builder.Services.ConfigureSwaggerGen(setup =>
+{
+    setup.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo
+    {
+        Title = "Weather Forecasts",
+        Version = "v1"
+    });
+});
 
 var app = builder.Build();
 
@@ -52,6 +60,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+app.UseSwagger();
+
 app.UseCors("corspolicy");
 app.UseHttpsRedirection();
 app.UseAuthentication();

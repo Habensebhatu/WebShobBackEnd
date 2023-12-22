@@ -1,5 +1,4 @@
 ﻿using System;
-using Microsoft.AspNetCore.Http;
 
 namespace business_logic_layer.ViewModel
 {
@@ -14,8 +13,5 @@ namespace business_logic_layer.ViewModel
         public bool IsPopular { get; set; } = false;
         public Guid CategoryId { get; set; }
     }
-
-
-    
 }
 

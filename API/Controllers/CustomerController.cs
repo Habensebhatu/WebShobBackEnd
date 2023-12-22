@@ -14,31 +14,28 @@ namespace API.Controllers
     public class CustomerController : ControllerBase
     {
         private readonly customerBLL _customer;
+
         public CustomerController()
         {
-
             _customer = new customerBLL();
         }
-        [HttpPost]
-        public async Task<ActionResult<CustomerModel>> addCustomer(CustomerModel customer)
-        {
 
+        [HttpPost("AddCustomer")]
+        public async Task<ActionResult<CustomerModel>> AddCustomer([FromBody] CustomerModel customer)
+        {
             if (customer == null)
             {
                 return BadRequest();
             }
 
             CustomerModel result = await _customer.AddCustomer(customer);
-
-            return customer;
-
+            return result;
         }
 
-        [HttpGet("{customer}")]
-        public async Task<ActionResult<CustomerModel>> getCategoryByCategory(string customer)
+        [HttpGet("GetCustomerByEmail/{email}")]
+        public async Task<ActionResult<CustomerModel>> GetCustomerByEmail(string email)
         {
-            return await _customer.GetCustomerByEmail(customer);
+            return await _customer.GetCustomerByEmail(email);
         }
-
     }
 }

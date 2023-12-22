@@ -32,7 +32,7 @@ namespace Data_layer.Data
         {
             if (!optionsBuilder.IsConfigured)
             {
-               optionsBuilder.UseSqlServer("Server=localhost,1433;Database=Webshop;User Id=sa;Password=Admin@123;TrustServerCertificate=True;");
+               optionsBuilder.UseSqlServer("Server=tcp:webshopserverf.database.windows.net,1433;Initial Catalog=Webshop;Persist Security Info=False;User ID=Filimon;Password=Icatt@06;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;");
             }
         }
 

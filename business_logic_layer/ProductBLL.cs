@@ -141,6 +141,10 @@ namespace business_logic_layer
         public async Task<productModelS> GetProductById(Guid id)
         {
             var products = await _ProductDAL.GetProductById(id);
+            if (products == null)
+            {
+                return null;
+            }
             return new productModelS
             {
                 productId = products.productId,
@@ -148,11 +152,11 @@ namespace business_logic_layer
                 Price = products.Price,
                 Description = products.Description,
                 ImageUrls = products.ProductImages
-                    .OrderBy(pi => pi.Index)  // <-- Order the ProductImages by their Index here
+                    .OrderBy(pi => pi.Index)  
                     .Select(pi => new ImageUpdateModel
                     {
                         Index = pi.Index,
-                        File = pi.ImageUrl // Assuming ImageUrl is the file path or URL you want
+                        File = pi.ImageUrl 
                     }).ToList(),
                 CategoryId = products.CategoryId,
                 CategoryName = products.Category.Name

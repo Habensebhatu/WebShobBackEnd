@@ -45,7 +45,7 @@ namespace business_logic_layer
         }
 
 
-        public async Task<List<CartModel>> GetCart(string sessionId, string userID)
+        public async Task<List<CartModel>> GetCart(string sessionId, string? userID)
         {
             Guid? userId = null;
             if (!string.IsNullOrWhiteSpace(userID))

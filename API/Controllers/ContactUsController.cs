@@ -9,19 +9,22 @@ namespace API.Controllers
     public class ContactUsController : ControllerBase
     {
         private readonly IEmailContactUs emailService;
+
         public ContactUsController(IEmailContactUs service)
         {
             this.emailService = service;
         }
 
-        [HttpPost]
-        public async Task<IActionResult> SubmitQuote([FromBody] MailContactUS contactUsRequest)
+        [HttpPost("SubmitContactRequest")]
+        public async Task<IActionResult> SubmitContactRequest([FromBody] MailContactUS contactUsRequest)
         {
-            MailContactUS mailrequest = new MailContactUS();
-            mailrequest.Email = contactUsRequest.Email;
-            mailrequest.Name = contactUsRequest.Name;
-            mailrequest.Body = contactUsRequest.Body;
-            mailrequest.Telephone = contactUsRequest.Telephone;
+            MailContactUS mailrequest = new MailContactUS
+            {
+                Email = contactUsRequest.Email,
+                Name = contactUsRequest.Name,
+                Body = contactUsRequest.Body,
+                Telephone = contactUsRequest.Telephone
+            };
             await emailService.SendEmailAsync(mailrequest);
 
             return Ok();

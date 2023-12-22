@@ -18,17 +18,16 @@ namespace API.Controllers
             _cartBLL = new CartBLL();
         }
 
-        [HttpPost]
+        [HttpPost("AddCartItem")]
         public async Task<ActionResult<CartModel>> AddToCart([FromBody] CartModel cart)
         {
             ClaimsPrincipal currentUser = this.User;
             string userId = currentUser?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             if (string.IsNullOrWhiteSpace(userId))
             {
-                userId = _cartBLL.GetDefaultUserId();  // Fetch the default user id
+                userId = _cartBLL.GetDefaultUserId();  
             }
 
-            Console.WriteLine($"userId: {userId}");
             if (cart == null)
             {
                 return BadRequest();
@@ -39,7 +38,7 @@ namespace API.Controllers
 
 
 
-        [HttpGet]
+        [HttpGet("GetCartItems")]
         public async Task<ActionResult<List<CartModel>>> GetCart(string sessionId)
         {
             ClaimsPrincipal currentUser = this.User;
@@ -58,7 +57,7 @@ namespace API.Controllers
             return cart;
         }
 
-        [HttpDelete]
+        [HttpDelete("ClearAllCartItems")]
         public async Task<IActionResult> ClearCart(string sessionId)
         {
             ClaimsPrincipal currentUser = this.User;
@@ -68,13 +67,12 @@ namespace API.Controllers
         }
 
 
-        [HttpDelete("{productId}")]
+        [HttpDelete("RemoveFromCart/{productId}")]
         public async Task<IActionResult> RemoveFromCart(Guid productId, [FromQuery] string sessionId)
         {
             ClaimsPrincipal currentUser = this.User;
             string userId = currentUser?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-            // If the user is not logged in and there's no session id, return a bad request.
             if (string.IsNullOrWhiteSpace(userId) && string.IsNullOrWhiteSpace(sessionId))
                 return BadRequest(new { message = "Either User Id or Session Id is required." });
 
@@ -83,7 +81,7 @@ namespace API.Controllers
         }
 
 
-        [HttpPut("{productId}")]
+        [HttpPut("UpdateProductQuantity/{productId}")]
         public async Task<ActionResult<CartModel>> UpdateProductQuantity(Guid productId, [FromQuery] string sessionId)
         {
             ClaimsPrincipal currentUser = this.User;

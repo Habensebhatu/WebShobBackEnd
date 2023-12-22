@@ -32,7 +32,7 @@ namespace business_logic_layer
                  $"<br><br>Met deze e-mail willen wij u graag bevestigen dat wij uw bericht hebben ontvangen" +
                  $" en ons team zal hier zo spoedig mogelijk op reageren." +
                  $"<br><br> Met vriendelijke groet,<br><br>" +
-                 $"WebSheba";
+                 $"Sofani market";
             confirmationEmail.Body = confirmationBuilder.ToMessageBody();
 
             using (var client = new SmtpClient())

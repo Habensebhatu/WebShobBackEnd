@@ -21,7 +21,8 @@ namespace business_logic_layer
 
         public async Task SendEmailAsync(mailRequestModel mailRequest)
         {
-            var emailTemplate = System.IO.File.ReadAllText("/Users/habensebhatu/webShop/webshop/business_logic_layer/emailTemplate.html");
+            var emailTemplatePath = Path.Combine(Directory.GetCurrentDirectory(), "emailTemplate.html");
+            var emailTemplate = await File.ReadAllTextAsync(emailTemplatePath);
             emailTemplate = emailTemplate.Replace("{OrderDate}", mailRequest.OrderDate.ToString());
             emailTemplate = emailTemplate.Replace("{recipientName}", mailRequest.recipientName);
             emailTemplate = emailTemplate.Replace("{line1}", mailRequest.line1);

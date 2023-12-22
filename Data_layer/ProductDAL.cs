@@ -19,17 +19,15 @@ namespace Data_layer
         {
             _context.Product.Add(product);
             await _context.SaveChangesAsync();
-            Console.WriteLine($"imageUrls: {imageUrls}");
-
+         
             for (int i = 0; i < imageUrls.Count; i++)
             {
                 var productImage = new ProductImageEnityModel
                 {
                     ImageUrl = imageUrls[i],
                     ProductId = product.productId,
-                    Index = i  // Setting the index for each imageUrl
+                    Index = i  
                 };
-                Console.WriteLine($"Setting index for {imageUrls[i]}: {i}");  // Logging the index
                 _context.ProductImage.Add(productImage);
             }
 
@@ -56,7 +54,6 @@ namespace Data_layer
             return await _context.Product
                 .Include(p => p.Category)
                 .Include(p => p.ProductImages)
-                // Ordering products based on the smallest (minimum) 'Index' of their associated images.
                 .OrderBy(p => p.ProductImages.Min(img => img.Index))
                 .ToListAsync();
         }
@@ -131,10 +128,7 @@ namespace Data_layer
             var existingProduct = _context.Product.Find(product.productId);
             if (existingProduct != null)
             {
-                // Update product details
                 _context.Entry(existingProduct).CurrentValues.SetValues(product);
-
-                // Handle updating images 
                 var existingImages = _context.ProductImage.Where(pi => pi.ProductId == product.productId).ToList();
 
      
@@ -146,7 +140,6 @@ namespace Data_layer
                     }
                 }
 
-                // Add new images
                 foreach (var imageModel in imageModels)
                 {
                     if (!existingImages.Any(ei => ei.ImageUrl == imageModel.file))
@@ -155,7 +148,6 @@ namespace Data_layer
                         {
                             ImageUrl = imageModel.file,
                             ProductId = product.productId,
-                            // Assuming your ProductImageEnityModel has an Index property
                             Index = imageModel.index
                         };
                         _context.ProductImage.Add(productImage);

@@ -2,8 +2,7 @@ using business_logic_layer.ViewModel;
 using Microsoft.AspNetCore.Mvc;
 using Stripe;
 using Stripe.Checkout;
-using business_logic_layer;  // Added this line to use your business layer
-using shortid;
+using business_logic_layer;  
 using IdGen;
 
 namespace API.Controllers
@@ -18,7 +17,7 @@ namespace API.Controllers
         private readonly IEmailService _emailService;
         public StripeController(IEmailService emailService)
         {
-            StripeConfiguration.ApiKey = "sk_test_51NTNZBD7MblCQnUpNgCct1zsd7QMxOPgbKvgmZNKSOODW7xAk6VJm8trHx9ledkEj4nZ5CqzZuDoZslvYLcAmuuw00isSEHR10";
+            StripeConfiguration.ApiKey = "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";
             _orderBLL = new OrderBLL();
             _productBLL = new ProductBLL();
             _customer = new customerBLL();
@@ -30,9 +29,13 @@ namespace API.Controllers
         {
 
             var lineItems = new List<SessionLineItemOptions>();
+            decimal totalAmount = 0;
 
             foreach (var item in request.Items)
             {
+                decimal itemTotal = item.Price * item.Quantity;
+                totalAmount += itemTotal;
+
                 lineItems.Add(new SessionLineItemOptions
                 {
                     PriceData = new SessionLineItemPriceDataOptions
@@ -51,6 +54,25 @@ namespace API.Controllers
 
                 });
             }
+
+         
+            //if (totalAmount < 80)
+            //{
+            //    lineItems.Add(new SessionLineItemOptions
+            //    {
+            //        PriceData = new SessionLineItemPriceDataOptions
+            //        {
+            //            UnitAmount = 695, 
+            //            Currency = "eur",
+            //            ProductData = new SessionLineItemPriceDataProductDataOptions
+            //            {
+            //                Name = "Shipping",
+                            
+            //            },
+            //        },
+            //        Quantity = 1,
+            //    });
+            //}
 
 
 
@@ -83,8 +105,8 @@ namespace API.Controllers
                         Message = "We'll email you instructions on how to get started.",
                     },
                 },
-                SuccessUrl = "http://localhost:4200/payment-success",
-                CancelUrl = "http://localhost:4200/payment-cancelled",
+                SuccessUrl = "https://filimon.azurewebsites.net/payment-success",
+                CancelUrl = "https://filimon.azurewebsites.net/home",
 
             };
 
@@ -103,13 +125,14 @@ namespace API.Controllers
             return Ok(new { id = session.Id });
         }
 
-
-        const string endpointSecret = "whsec_e0b277601cf11f1a539bf0be090a11455fed7feb64d40bef2817f12e9856f208";
+       
+        const string endpointSecret = "whsec_Iwqf5S336AkPbmzocLWEx3E9peq7Of60";
 
 
         [HttpPost("webhook")]
         public async Task<IActionResult> Index()
         {
+
             var json = await new StreamReader(HttpContext.Request.Body).ReadToEndAsync();
             var stripeSignatureHeader = Request.Headers["Stripe-Signature"];
 
@@ -129,6 +152,7 @@ namespace API.Controllers
                     {
                         return BadRequest("Unexpected event type.");
                     }
+
 
                     var service = new Stripe.Checkout.SessionService();
                     var sessionWithLineItems = service.Get(session.Id, new Stripe.Checkout.SessionGetOptions
@@ -154,6 +178,14 @@ namespace API.Controllers
                         Console.WriteLine($"Payment method type used: {paymentMethodType}");
 
                     }
+
+                    if (string.IsNullOrEmpty(customerEmail) && session.CustomerId != null)
+                    {
+                        var customerService = new CustomerService();
+                        var customer = customerService.Get(session.CustomerId);
+                        customerEmail = customer.Email;
+                    }
+
                     Console.WriteLine($"session.ShippingDetails: {session.ShippingDetails}");
 
                     var shippingDetails = session.ShippingDetails;
@@ -228,11 +260,7 @@ namespace API.Controllers
                         });
                     }
                     Console.WriteLine($"Ordermodel: {orderModel}");
-
-
                     // Now save using your business logic layer
-
-
                     await _orderBLL.AddOrder(orderModel);
                     await _emailService.SendEmailAsync(mailRequest);
                 }

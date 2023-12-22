@@ -1,6 +1,4 @@
-﻿using System;
-using Data_layer.Context;
-using Data_layer.Context.Data;
+﻿using Data_layer.Context.Data;
 using Data_layer.Data;
 using Microsoft.EntityFrameworkCore;
 
@@ -42,7 +40,7 @@ namespace Data_layer
 
         public async Task<List<CartEnityModel>> GetCartItems(string sessionId, Guid? userId = null)
         {
-            Console.WriteLine($"session.ShippingDetails: {userId}");
+            
             if (userId.HasValue && userId.Value != Guid.Empty)
                 return await _context.Cart.Where(item => item.UserId == userId.Value).ToListAsync();
             else
