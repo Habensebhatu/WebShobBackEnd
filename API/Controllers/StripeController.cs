@@ -160,7 +160,7 @@ namespace API.Controllers
                         Expand = new List<string> { "line_items" }
                     });
                     Console.WriteLine($"session session session session: {session}");
-                    string customerEmail = session.CustomerEmail;
+                    string customerEmail = session.CustomerDetails?.Email;
                     string paymentMethodType = null;
 
                     // If customerEmail is empty, fetch associated PaymentIntent to get the email
