@@ -25,6 +25,13 @@
       <GlobalPropertiesToRemove></GlobalPropertiesToRemove>
     </ProjectReference>
   </ItemGroup>
+  
+  <ItemGroup>
+    <Content Include="..\business_logic_layer\emailTemplate.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
   <ItemGroup>
     <None Remove="Controllers\" />
   </ItemGroup>
