@@ -28,7 +28,7 @@ namespace API.Controllers
 
             if (user == null)
             {
-                return BadRequest(new { message = "Invalid email or password" });
+                return BadRequest(new { message = "Invalid email " });
             }
 
             return user;
