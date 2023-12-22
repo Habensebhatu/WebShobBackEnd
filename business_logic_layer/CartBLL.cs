@@ -94,7 +94,7 @@ namespace business_logic_layer
                 return null;
             }
 
-            // Convert and return
+          
             return new CartModel
             {
                 productId = updatedProduct.productId,
@@ -104,7 +104,7 @@ namespace business_logic_layer
                 ImageUrl = updatedProduct.ImageUrl,
                 Description = updatedProduct.Description,
                 Quantity = updatedProduct.Quantity
-                // ... and so on for all properties
+              
             };
         }
 
