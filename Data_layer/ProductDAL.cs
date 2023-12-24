@@ -77,6 +77,16 @@ namespace Data_layer
                                          .ToListAsync();
         }
 
+        public async Task<List<Product>> GetProductsPageNumber(int pageNumber, int pageSize)
+        {
+            return await _context.Product.Include(p => p.Category)
+                                         .Include(p => p.ProductImages)
+                                         .Skip((pageNumber - 1) * pageSize)
+                                         .Take(pageSize)
+                                         .ToListAsync();
+        }
+
+
         public async Task<List<Product>> GetProductsByNameAndPrice(string category, decimal minPrice, decimal? maxPrice, int pageNumber, int pageSize)
         {
             var query = _context.Product.Include(p => p.Category)
@@ -169,6 +179,14 @@ namespace Data_layer
             return await _context.Product.Include(p => p.Category).Include(p => p.ProductImages).Where(p => p.IsPopular).ToListAsync();
         }
 
+        public async Task<List<Product>> GetProductsByCategory(string category)
+        {
+            return await _context.Product
+                                 .Include(p => p.Category)
+                                 .Include(p => p.ProductImages)
+                                 .Where(p => p.Category.Name == category) 
+                                 .ToListAsync();
+        }
 
 
     }

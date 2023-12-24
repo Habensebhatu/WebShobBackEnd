@@ -116,6 +116,28 @@ namespace business_logic_layer
             }).ToList();
         }
 
+        public async Task<List<productModelS>> GetProductsPageNumber(int pageNumber, int pageSize)
+        {
+            var products = await _ProductDAL.GetProductsPageNumber(pageNumber, pageSize);
+
+            return products.Select(p => new productModelS
+            {
+                productId = p.productId,
+                Title = p.Title,
+                Price = p.Price,
+                Description = p.Description,
+                ImageUrls = p.ProductImages
+                    .OrderBy(pi => pi.Index)
+                    .Select(pi => new ImageUpdateModel
+                    {
+                        Index = pi.Index,
+                        File = pi.ImageUrl
+                    }).ToList(),
+                CategoryId = p.CategoryId,
+                CategoryName = p.Category.Name
+            }).ToList();
+        }
+
         public async Task<List<productModelS>> GetProductsByNameAndPrice(string category, decimal minPrice, decimal? maxPrice, int pageNumber, int pageSize)
         {
             var products = await _ProductDAL.GetProductsByNameAndPrice(category, minPrice, maxPrice, pageNumber, pageSize);
@@ -272,6 +294,29 @@ namespace business_logic_layer
         public async Task<List<productModelS>> GetPopularProducts()
         {
             var products = await _ProductDAL.GetPopularProducts();
+            return products.Select(p => new productModelS
+            {
+                productId = p.productId,
+                Title = p.Title,
+                Price = p.Price,
+                Description = p.Description,
+                CategoryId = p.CategoryId,
+                CategoryName = p.Category.Name,
+                IsPopular = p.IsPopular,
+                ImageUrls = p.ProductImages
+                    .OrderBy(pi => pi.Index)
+                    .Select(pi => new ImageUpdateModel
+                    {
+                        Index = pi.Index,
+                        File = pi.ImageUrl
+                    }).ToList()
+            }).ToList();
+
+        }
+
+        public async Task<List<productModelS>> GetProductsByCategory(string category)
+        {
+            var products = await _ProductDAL.GetProductsByCategory(category);
             return products.Select(p => new productModelS
             {
                 productId = p.productId,

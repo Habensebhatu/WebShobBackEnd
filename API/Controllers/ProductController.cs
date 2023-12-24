@@ -44,6 +44,18 @@ namespace API.Controllers
             return product;
         }
 
+        [HttpGet("PageNumber")]
+        public async Task<ActionResult<List<productModelS>>> GetProductsPageNumber([FromQuery] int pageNumber, [FromQuery] int pageSize)
+        {
+            var product = await _productBLL.GetProductsPageNumber(pageNumber, pageSize);
+            if (product == null)
+            {
+                return NotFound();
+            }
+            return product;
+        }
+
+
         [HttpGet("ByCategory/{category}/ByPriceRange")]
         public async Task<ActionResult<List<productModelS>>> GetProductsByNameAndPrice(
      string category,
@@ -139,7 +151,12 @@ namespace API.Controllers
             return Ok(popularProducts);
         }
 
-
+        [HttpGet("GetProductsByCategory/{category}")]
+        public async Task<ActionResult<List<productModelS>>> GetProductsByCategory(string category)
+        {
+            var popularProducts = await _productBLL.GetProductsByCategory(category);
+            return Ok(popularProducts);
+        }
 
     }
 }
