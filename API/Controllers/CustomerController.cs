@@ -1,10 +1,5 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using business_logic_layer;
 using business_logic_layer.ViewModel;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
@@ -36,6 +31,12 @@ namespace API.Controllers
         public async Task<ActionResult<CustomerModel>> GetCustomerByEmail(string email)
         {
             return await _customer.GetCustomerByEmail(email);
+        }
+
+        [HttpGet("GetCustomerByEmail")]
+        public async Task<ActionResult<IEnumerable<CustomerModel>>> GetCustomers()
+        {
+            return await _customer.GetCustomers();
         }
     }
 }

@@ -22,7 +22,7 @@ namespace business_logic_layer
                 CustomerEmail = customer.CustomerEmail,
                 city = customer.city,
                 line1 = customer.line1,
-                phoneNumber = "0618823849",
+                phoneNumber = customer.phoneNumber,
                 postalCode = customer.postalCode
 
             };
@@ -33,7 +33,7 @@ namespace business_logic_layer
 
         public async Task<CustomerModel> GetCustomerByEmail(string customerEmail)
         {
-            var customer = await _customerDAL.getCustomerBYEmail(customerEmail);
+            var customer = await _customerDAL.GetCustomerBYEmail(customerEmail);
             if (customer == null)
             {
                 return null;
@@ -49,6 +49,29 @@ namespace business_logic_layer
                 line1 = customer.line1
 
             };
+        }
+
+        public async Task<List<CustomerModel>> GetCustomers()
+        {
+            List<CustomerEntityModel> customers = await _customerDAL.GetCustomers();
+            if (customers == null)
+            {
+                return null;
+            }
+
+            List<CustomerModel> customerModel = customers.Select(c => new CustomerModel
+            {
+                CustomerId = c.CustomerId,
+                CustomerEmail = c.CustomerEmail,
+                city = c.city,
+                line1 = c.line1,
+                phoneNumber = c.phoneNumber,
+                postalCode = c.postalCode,
+                recipientName =c.recipientName
+            }).ToList();
+
+            return customerModel;
+
         }
     }
 }

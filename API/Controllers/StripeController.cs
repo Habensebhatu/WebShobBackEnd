@@ -86,6 +86,10 @@ namespace API.Controllers
                      "card",
                      "ideal"
                 },
+                PhoneNumberCollection = new SessionPhoneNumberCollectionOptions
+                {
+                    Enabled = true,
+                },
 
                 LineItems = lineItems,
                 Mode = "payment",
@@ -159,7 +163,8 @@ namespace API.Controllers
                     {
                         Expand = new List<string> { "line_items" }
                     });
-                    Console.WriteLine($"session session session session: {session}");
+                   
+                    var customerPhone = session.CustomerDetails.Phone;
                     string customerEmail = session.CustomerDetails?.Email;
                     string paymentMethodType = null;
 
@@ -201,7 +206,7 @@ namespace API.Controllers
                             CustomerEmail = customerEmail,
                             recipientName = shippingDetails.Name,
                             city = shippingAddress.City,
-                            phoneNumber = "04672939939",
+                            phoneNumber = customerPhone,
                             line1 = shippingAddress.Line1,
                             postalCode = shippingAddress.PostalCode
 

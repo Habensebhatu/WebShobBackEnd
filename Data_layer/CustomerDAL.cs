@@ -20,7 +20,12 @@ namespace Data_layer
             return customer;
         }
 
-        public async Task<CustomerEntityModel> getCustomerBYEmail(string customerEmail)
+        public async Task<List<CustomerEntityModel>> GetCustomers()
+        {
+            return await _context.Customer.ToListAsync();
+        }
+
+        public async Task<CustomerEntityModel> GetCustomerBYEmail(string customerEmail)
         {
             CustomerEntityModel customer = await _context.Customer.FirstOrDefaultAsync(x => x.CustomerEmail == customerEmail);
             if (customer == null)
