@@ -21,6 +21,7 @@ namespace Data_layer
             if (existingItem != null)
             {
                 existingItem.Quantity += 1;
+               
                 _context.Cart.Update(existingItem);
             }
             else
@@ -105,6 +106,7 @@ namespace Data_layer
             if (productToUpdate != null)
             {
                 productToUpdate.Quantity += -1;
+              
 
                 if (productToUpdate.Quantity <= 0)
                 {

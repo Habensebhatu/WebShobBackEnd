@@ -44,12 +44,18 @@ namespace Data_layer.Data
             modelBuilder.Entity<Product>()
                 .Property(p => p.Price)
                 .HasColumnType("decimal(18,2)");
-
+            modelBuilder.Entity<Product>()
+              .Property(p => p.Kilo)
+              .HasColumnType("decimal(18,2)");
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.Entity<CartEnityModel>()
               .Property(p => p.Price)
               .HasColumnType("decimal(18,2)");
+
+            modelBuilder.Entity<CartEnityModel>()
+             .Property(p => p.Kilo)
+             .HasColumnType("decimal(18,2)");
 
             base.OnModelCreating(modelBuilder);
 

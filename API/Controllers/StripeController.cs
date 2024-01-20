@@ -29,13 +29,15 @@ namespace API.Controllers
         {
 
             var lineItems = new List<SessionLineItemOptions>();
-            decimal totalAmount = 0;
+            decimal totalWeight = 0;
 
             foreach (var item in request.Items)
             {
-                decimal itemTotal = item.Price * item.Quantity;
-                totalAmount += itemTotal;
 
+                if (item.Kilo != null) 
+                {
+                    totalWeight += (item.Kilo ?? 0) * item.Quantity; 
+                }
                 lineItems.Add(new SessionLineItemOptions
                 {
                     PriceData = new SessionLineItemPriceDataOptions
@@ -55,24 +57,44 @@ namespace API.Controllers
                 });
             }
 
-         
-            //if (totalAmount < 80)
-            //{
-            //    lineItems.Add(new SessionLineItemOptions
-            //    {
-            //        PriceData = new SessionLineItemPriceDataOptions
-            //        {
-            //            UnitAmount = 695, 
-            //            Currency = "eur",
-            //            ProductData = new SessionLineItemPriceDataProductDataOptions
-            //            {
-            //                Name = "Shipping",
-                            
-            //            },
-            //        },
-            //        Quantity = 1,
-            //    });
-            //}
+
+            decimal shippingCost;
+
+
+            if (totalWeight <= 10)
+            {
+                shippingCost = 7.65M;
+            }
+            else if (totalWeight <= 23)
+            {
+                shippingCost = 13.90M;
+            }
+            else if (totalWeight <= 33)
+            {
+                shippingCost = 21.55M;
+            }
+            else
+            {
+                shippingCost = 27.80M;
+               
+            }
+
+
+
+            lineItems.Add(new SessionLineItemOptions
+            {
+                PriceData = new SessionLineItemPriceDataOptions
+                {
+                    UnitAmount = (long?)(shippingCost * 100),
+          
+                    Currency = "eur",
+                    ProductData = new SessionLineItemPriceDataProductDataOptions
+                    {
+                        Name = "Shipping",
+                    },
+                },
+                Quantity = 1,
+            });
 
 
 
@@ -84,7 +106,7 @@ namespace API.Controllers
 
                 {
                      "card",
-                     "ideal"
+                     "ideal",
                 },
                 PhoneNumberCollection = new SessionPhoneNumberCollectionOptions
                 {
@@ -93,6 +115,7 @@ namespace API.Controllers
 
                 LineItems = lineItems,
                 Mode = "payment",
+
                 ShippingAddressCollection = new SessionShippingAddressCollectionOptions
                 {
                     AllowedCountries = new List<string> { "NL" },
@@ -109,8 +132,8 @@ namespace API.Controllers
                         Message = "We'll email you instructions on how to get started.",
                     },
                 },
-                SuccessUrl = "https://filimon.azurewebsites.net/payment-success",
-                CancelUrl = "https://filimon.azurewebsites.net/home",
+                SuccessUrl = "https://sofanimarket.com/payment-success",
+                CancelUrl = "https://sofanimarket.com/home",
 
             };
 

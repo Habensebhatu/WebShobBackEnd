@@ -14,7 +14,7 @@ namespace business_logic_layer
     {
         private readonly CategoryDNL _CategoryDAL;
         private readonly ProductDAL _ProductDAL;
-        private readonly string azureConnectionString = "DefaultEndpointsProtocol=https;AccountName=imagestorewebshop;AccountKey=zF/V2og9TL6djw1t5q5Ej85iIv6gTRXFYZYYGNM2mQCL9GqiIJPkxcJ1oaLiDvdXwjukLUGjpArJ+ASteuO8tg==;EndpointSuffix=core.windows.net";
+        private readonly string azureConnectionString = "DefaultEndpointsProtocol=https;AccountName=imagestorewebshopsofani;AccountKey=+THKAZoe7Cw74fM89T3JtjWySqTEQvqtA4jnlAvp6AJ1biz/F4K18tmS8pZocJ0GJNsQcqt7Br3A+AStAw9KJQ==;EndpointSuffix=core.windows.net";
 
         public ProductBLL()
         {
@@ -37,6 +37,7 @@ namespace business_logic_layer
                 productId = product.productId,
                 Title = product.Title,
                 Price = product.Price,
+                Kilo = product.Kilo,
                 Description = product.Description,
                 CategoryId = product.CategoryId,
                 IsPopular = product.IsPopular,
@@ -80,6 +81,7 @@ namespace business_logic_layer
                 productId = p.productId,
                 Title = p.Title,
                 Price = p.Price,
+                Kilo = p.Kilo,
                 Description = p.Description,
                 CategoryId = p.CategoryId,
                 CategoryName = p.Category.Name,
@@ -103,6 +105,7 @@ namespace business_logic_layer
                 productId = p.productId,
                 Title = p.Title,
                 Price = p.Price,
+                Kilo = p.Kilo,
                 Description = p.Description,
                 ImageUrls = p.ProductImages
                     .OrderBy(pi => pi.Index)
@@ -125,6 +128,7 @@ namespace business_logic_layer
                 productId = p.productId,
                 Title = p.Title,
                 Price = p.Price,
+                Kilo = p.Kilo,
                 Description = p.Description,
                 ImageUrls = p.ProductImages
                     .OrderBy(pi => pi.Index)
@@ -147,6 +151,7 @@ namespace business_logic_layer
                 productId = p.productId,
                 Title = p.Title,
                 Price = p.Price,
+                Kilo = p.Kilo,
                 Description = p.Description,
                 ImageUrls = p.ProductImages
                     .OrderBy(pi => pi.Index)
@@ -172,6 +177,7 @@ namespace business_logic_layer
                 productId = products.productId,
                 Title = products.Title,
                 Price = products.Price,
+                Kilo = products.Kilo,
                 Description = products.Description,
                 ImageUrls = products.ProductImages
                     .OrderBy(pi => pi.Index)  
@@ -193,6 +199,7 @@ namespace business_logic_layer
                 productId = p.productId,
                 Title = p.Title,
                 Price = p.Price,
+                Kilo = p.Kilo,
                 Description = p.Description,
                 CategoryId = p.CategoryId,
                 CategoryName = p.Category.Name,
@@ -219,6 +226,7 @@ namespace business_logic_layer
             {
                 Title = products.Title,
                 Price = products.Price,
+                Kilo = products.Kilo,
                 Description = products.Description,
                 CategoryId = products.CategoryId,
                 productId = products.productId,
@@ -237,6 +245,7 @@ namespace business_logic_layer
                 productId = p.productId,
                 Title = p.Title,
                 Price = p.Price,
+                Kilo = p.Kilo,
                 Description = p.Description,
                 ImageUrls = p.ProductImages?.FirstOrDefault()?.ImageUrl,
                 CategoryId = p.CategoryId,
@@ -276,6 +285,7 @@ namespace business_logic_layer
                 productId = product.productId,
                 Title = product.Title,
                 Price = product.Price,
+                Kilo = product.Kilo,
                 Description = product.Description,
                 CategoryId = categoryBYName.CategoryId,
                 IsPopular = product.IsPopular
@@ -299,6 +309,7 @@ namespace business_logic_layer
                 productId = p.productId,
                 Title = p.Title,
                 Price = p.Price,
+                Kilo = p.Kilo,
                 Description = p.Description,
                 CategoryId = p.CategoryId,
                 CategoryName = p.Category.Name,
@@ -322,6 +333,7 @@ namespace business_logic_layer
                 productId = p.productId,
                 Title = p.Title,
                 Price = p.Price,
+                Kilo = p.Kilo,
                 Description = p.Description,
                 CategoryId = p.CategoryId,
                 CategoryName = p.Category.Name,

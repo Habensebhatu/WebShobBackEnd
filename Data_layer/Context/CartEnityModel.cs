@@ -10,6 +10,7 @@ namespace Data_layer.Context.Data
         public Guid productId { get; set; }
         public string Title { get; set; }
         public decimal Price { get; set; }
+        public decimal? Kilo { get; set; }
         public string Description { get; set; }
         public string ImageUrl { get; set; }
         public int Quantity { get; set; }

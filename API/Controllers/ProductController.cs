@@ -30,7 +30,7 @@ namespace API.Controllers
             productData.NewImages = files;
             productModel result = await _productBLL.AddProduct(productData);
 
-            return result;
+            return result;   
         }
 
         [HttpGet("ByCategory/{category}")]
