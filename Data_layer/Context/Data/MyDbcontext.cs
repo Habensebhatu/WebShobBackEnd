@@ -27,6 +27,7 @@ namespace Data_layer.Data
         }
         public MyDbContext(DbContextOptions<MyDbContext> options) : base(options)
         {
+
         }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

@@ -31,7 +31,6 @@ namespace business_logic_layer
             emailTemplate = emailTemplate.Replace("{OrderNummer}", mailRequest.OrderNummer.ToString());
             emailTemplate = emailTemplate.Replace("{postalCode}", mailRequest.postalCode);
 
-            // Send confirmation text to customers
             var confirmationEmail = new MimeMessage();
             confirmationEmail.Sender = MailboxAddress.Parse(_emailSettings.SenderEmail);
             confirmationEmail.To.Add(MailboxAddress.Parse(mailRequest.CustomerName));
@@ -39,7 +38,7 @@ namespace business_logic_layer
             var confirmationBuilder = new BodyBuilder();
             decimal AmountTotal = 0;
             StringBuilder orderItemsBuilder = new StringBuilder();
-            foreach (var item in mailRequest.OrderItems) // Assuming you have a list called orderItems
+            foreach (var item in mailRequest.OrderItems) 
             {
                 decimal price = item.Price;
                 decimal total = item.Total;
@@ -65,14 +64,38 @@ namespace business_logic_layer
             confirmationBuilder.HtmlBody = emailTemplate;
             confirmationEmail.Body = confirmationBuilder.ToMessageBody();
 
+            await SendMimeMessageAsync(confirmationEmail);
+            var adminNotificationEmail = new MimeMessage();
+            adminNotificationEmail.Sender = MailboxAddress.Parse(_emailSettings.SenderEmail);
+            adminNotificationEmail.To.Add(MailboxAddress.Parse(_emailSettings.SenderEmail)); 
+            adminNotificationEmail.Subject = $"Nieuwe bestelling ontvangen: {mailRequest.OrderNummer}";
+
+            var adminBuilder = new BodyBuilder();
+            
+            adminBuilder.HtmlBody = $@"
+             <h1>Nieuwe Bestelling Ontvangen</h1>
+             <p><strong>Bestelnummer:</strong> {mailRequest.OrderNummer}</p>
+             <p><strong>Klantnaam:</strong> {mailRequest.recipientName}</p>
+             <p><strong>E-mail:</strong> {mailRequest.CustomerName}</p>
+            <p><strong>Adres:</strong> {mailRequest.line1}, {mailRequest.city}, {mailRequest.postalCode}</p>
+             <p><strong>Besteldatum:</strong> {mailRequest.OrderDate.ToString("dd-MM-yyyy")}</p>";
+
+            adminNotificationEmail.Body = adminBuilder.ToMessageBody();
+
+            await SendMimeMessageAsync(adminNotificationEmail);
+
+        }
+
+
+        private async Task SendMimeMessageAsync(MimeMessage message)
+        {
             using (var client = new SmtpClient())
             {
                 await client.ConnectAsync(_emailSettings.SmtpServer, _emailSettings.SmtpPort, SecureSocketOptions.StartTls);
                 await client.AuthenticateAsync(_emailSettings.SenderName, _emailSettings.SmtpPassword);
-                await client.SendAsync(confirmationEmail);
+                await client.SendAsync(message);
                 await client.DisconnectAsync(true);
             }
-
         }
     }
 

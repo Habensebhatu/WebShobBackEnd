@@ -63,7 +63,7 @@ namespace API.Controllers
 
             if (totalWeight <= 10)
             {
-                shippingCost = 7.65M;
+                shippingCost = 0;
             }
             else if (totalWeight <= 23)
             {
@@ -264,11 +264,17 @@ namespace API.Controllers
                     mailRequest.paymentMethodType = paymentMethodType;
                     foreach (var lineItem in sessionWithLineItems.LineItems)
                     {
-                        Console.WriteLine($"ineItem.Description: {lineItem.Description}");
+                       
+                        if (lineItem.Description == "Shipping") // Pas deze controle aan op basis van hoe je verzendkosten markeert
+                        {
+                            // Verwerk verzendkostenlijnitem
+                            // Je zou hier code kunnen toevoegen om verzendkosten te verwerken, als dat nodig is.
+                            continue; // Ga door naar het volgende lijnitem
+                        }
 
                         StripeImage product = await _productBLL.GetProductsByProductName(lineItem.Description);
 
-
+                      
                         orderModel.OrderDetails.Add(new OrderDetailModel
                         {
                             ProductId = product.productId,
