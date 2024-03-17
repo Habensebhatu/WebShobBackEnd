@@ -44,7 +44,7 @@ namespace Data_layer.Context.Data
            [Required]
             public string Street { get; set; }
 
-            public int? Number { get; set; } // Assuming house number, can be null
+            public int? Number { get; set; } 
 
             [Required]
             public string ZipCode { get; set; }
